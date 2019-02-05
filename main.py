@@ -1,5 +1,5 @@
 import requests
-
+import json
 
 s = requests.session()
 
@@ -59,6 +59,98 @@ class leetcode:
         }
         response = s.post(self.graphql, data=data, headers=self.headers)
         print(response.text)
+    
+    def get_all_problems(self):
+        data = {
+            'query': '''
+                query allQuestions {
+                    allQuestions {
+                        ...questionSummaryFields
+                        __typename
+                    }
+                }
+                fragment questionSummaryFields on QuestionNode {
+                    title
+                    titleSlug
+                    translatedTitle
+                    questionId
+                    questionFrontendId
+                    status
+                    difficulty
+                    isPaidOnly
+                    __typename
+                }
+                ''',
+            'variables': {}
+        }
+        response = s.post(self.graphql, data=data, headers=self.headers)
+        print(response.text)
+
+    def get_one_problem(self, titleSlug):
+        data = {
+            'operationName': "questionData",
+            'query': '''
+                    query questionData($titleSlug: String!) {
+                    question(titleSlug: $titleSlug) {
+                        questionId
+                        questionFrontendId
+                        boundTopicId
+                        title
+                        titleSlug
+                        content
+                        translatedTitle
+                        translatedContent
+                        isPaidOnly
+                        difficulty
+                        likes
+                        dislikes
+                        isLiked
+                        similarQuestions
+                        contributors {
+                        username
+                        profileUrl
+                        avatarUrl
+                        __typename
+                        }
+                        langToValidPlayground
+                        topicTags {
+                        name
+                        slug
+                        translatedName
+                        __typename
+                        }
+                        companyTagStats
+                        codeSnippets {
+                        lang
+                        langSlug
+                        code
+                        __typename
+                        }
+                        stats
+                        hints
+                        solution {
+                        id
+                        canSeeDetail
+                        __typename
+                        }
+                        status
+                        sampleTestCase
+                        metaData
+                        judgerAvailable
+                        judgeType
+                        mysqlSchemas
+                        enableRunCode
+                        enableTestMode
+                        envInfo
+                        __typename
+                    }
+                }
+                ''',
+            'variables': json.dumps({'titleSlug': titleSlug})
+        }
+        # data['variables'] = titleSlug
+        response = s.post(self.graphql, data=data, headers=self.headers)
+        print(response.text)
 
 l = leetcode('Clavier-Zhang', 'zyc990610')
-l.get_user_info()
+l.get_one_problem('two-sum')
