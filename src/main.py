@@ -1,5 +1,6 @@
 import requests
 import json
+from bs4 import BeautifulSoup
 
 s = requests.session()
 
@@ -125,7 +126,11 @@ class leetcode:
         }
         # data['variables'] = titleSlug
         response = s.post(self.graphql, data=data, headers=self.headers)
-        print(response.text)
+        # print(response.text)
+        return(response.json()['data']['question']['content'])
 
 l = leetcode('Clavier-Zhang', 'zyc990610')
-l.get_one_problem('two-sum')
+html = l.get_one_problem('two-sum')
+
+soup = BeautifulSoup(html, features="html.parser")
+print(soup.get_text())
