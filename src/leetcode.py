@@ -59,7 +59,8 @@ class Leetcode:
             'variables': {}
         }
         response = s.post(self.graphql, data=data, headers=self.headers)
-        print(response.text)
+        
+        print(response.json())
     
     def get_all_problems(self):
         data = {
@@ -67,68 +68,60 @@ class Leetcode:
                 query allQuestions {
                     allQuestions {
                         ...questionSummaryFields
-                        __typename
                     }
                 }
                 fragment questionSummaryFields on QuestionNode {
                     title
                     titleSlug
-                    translatedTitle
                     questionId
-                    questionFrontendId
                     status
                     difficulty
                     isPaidOnly
-                    __typename
                 }
                 ''',
             'variables': {}
         }
         response = s.post(self.graphql, data=data, headers=self.headers)
-        print(response.text)
+        for q in response.json()['data']['allQuestions']:
+            print(q)
+        # print(response.json()['data']['allQuestions'])
 
-    def get_one_problem(self, titleSlug):
+    def get_one_problem_by_title_slug(self, titleSlug):
         data = {
-            'operationName': "questionData",
             'query': '''
-                    query questionData($titleSlug: String!) {
+                query questionData($titleSlug: String!) {
                     question(titleSlug: $titleSlug) {
                         questionId
                         title
                         content
-                        isPaidOnly
                         difficulty
                         likes
                         dislikes
-                        isLiked
                         similarQuestions
                         topicTags {
-                        name
-                        slug
+                            name
+                            slug
                         }
                         codeSnippets {
-                        lang
-                        langSlug
-                        code
-                        }
-                        stats
-                        hints
-                        solution {
-                        id
-                        canSeeDetail
+                            lang
+                            langSlug
+                            code
                         }
                         status
                         sampleTestCase
                     }
                 }
-                ''',
+            ''',
             'variables': json.dumps({'titleSlug': titleSlug})
         }
         response = s.post(self.graphql, data=data, headers=self.headers)
+        print(response.json()['data']['question']['codeSnippets'][0]['code'])
         return(response.json()['data']['question']['content'])
 
 # l = Leetcode('Clavier-Zhang', 'zyc990610')
+# l.get_one_problem_by_title_slug('two-sum')
 # html = l.get_one_problem('two-sum')
 
 # soup = BeautifulSoup(html, features="html.parser")
 # print(soup.get_text())
+
