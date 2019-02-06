@@ -9,9 +9,10 @@ class Local:
         json.dump(lis, fp)
         fp.close()
         print(json.load(open('./data/user.json', 'r')))
-    
+
     def save_all_problems(self, problems):
-        if (problems == None) return
+        if (problems == None):
+            return
         fp = open('./data/problems.json', 'w')
         json.dump(problems, fp)
         fp.close()
@@ -19,6 +20,3 @@ class Local:
     def fetch_all_problems(self):
         return json.load(open('./data/problems.json', 'r'))
 
-
-l = Local()
-l.test()

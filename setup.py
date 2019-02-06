@@ -13,7 +13,7 @@ setup(
     entry_points='''
         [console_scripts]
         leet=src.commands:leet
-        get=src.commands:get
+        submit=src.commands:submit
         test1=src.commands:test1
     ''',
 )
