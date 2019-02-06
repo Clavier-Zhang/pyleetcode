@@ -123,7 +123,6 @@ class Leetcode:
     def submit(self):
         data = {
             'test_mode': 'false',
-            'judge_type': 'large',
             'lang': 'java',
             'question_id': '2',
             'typed_code': '''
@@ -153,21 +152,16 @@ class Leetcode:
                 }
             '''
         }
-        self.session.cookies.clear()
         self.headers['content-type'] = 'application/json' 
         response = self.session.post(self.submit_url, data=json.dumps(data), headers=self.headers)
         print(response.text)
-        print(json.dumps(data))
+    
+    def test(self):
+        return
 
 l = Leetcode('Clavier-Zhang', 'zyc990610')
 l.submit()
 
-
-# l.get_one_problem_by_title_slug('two-sum')
-# html = l.get_one_problem('two-sum')
-
-# soup = BeautifulSoup(html, features="html.parser")
-# print(soup.get_text())
 
 
 
