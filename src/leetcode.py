@@ -12,10 +12,12 @@ class Leetcode:
         'Origin': 'https://leetcode.com',
         'Referer': 'https://leetcode.com',
         'X-Requested-With': 'XMLHttpRequest',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
     }
 
     login_url = 'https://leetcode.com/accounts/login/'
     graphql = 'https://leetcode.com/graphql'
+    submit_url = 'https://leetcode.com/problems/add-two-numbers/submit/'
 
     def __init__(self, username, password):
         self.session = requests.session()
@@ -29,7 +31,7 @@ class Leetcode:
         return cookies[0:start]
     
     def get_first_CSRFtoken(self):
-        response = s.head(self.login_url)
+        response = self.session.head(self.login_url)
         return self.get_cookie(response.cookies, 'csrftoken')
 
     def login(self, username, password):
@@ -40,9 +42,9 @@ class Leetcode:
             'login': username,
             'password': password
         }
-        s.post(self.login_url, data=data, headers=self.headers)
-        sessionCSRF = self.get_cookie(s.cookies, 'csrftoken')
-        sessionId = self.get_cookie(s.cookies, 'LEETCODE_SESSION')
+        self.session.post(self.login_url, data=data, headers=self.headers)
+        sessionCSRF = self.get_cookie(self.session.cookies, 'csrftoken')
+        sessionId = self.get_cookie(self.session.cookies, 'LEETCODE_SESSION')
         self.headers['Cookie'] = 'LEETCODE_SESSION=' + sessionId + ';csrftoken=' + sessionCSRF + ';'
         self.headers['X-CSRFToken'] = sessionCSRF
 
@@ -58,7 +60,7 @@ class Leetcode:
             ]),
             'variables': {}
         }
-        response = s.post(self.graphql, data=data, headers=self.headers)
+        response = self.session.post(self.graphql, data=data, headers=self.headers)
         
         print(response.json())
     
@@ -81,7 +83,7 @@ class Leetcode:
                 ''',
             'variables': {}
         }
-        response = s.post(self.graphql, data=data, headers=self.headers)
+        response = self.session.post(self.graphql, data=data, headers=self.headers)
         for q in response.json()['data']['allQuestions']:
             print(q)
         # print(response.json()['data']['allQuestions'])
@@ -114,14 +116,58 @@ class Leetcode:
             ''',
             'variables': json.dumps({'titleSlug': titleSlug})
         }
-        response = s.post(self.graphql, data=data, headers=self.headers)
+        response = self.session.post(self.graphql, data=data, headers=self.headers)
         print(response.json()['data']['question']['codeSnippets'][0]['code'])
         return(response.json()['data']['question']['content'])
 
-# l = Leetcode('Clavier-Zhang', 'zyc990610')
+    def submit(self):
+        data = {
+            'test_mode': 'false',
+            'judge_type': 'large',
+            'lang': 'java',
+            'question_id': '2',
+            'typed_code': '''
+                /**
+                * Definition for singly-linked list.
+                * public class ListNode {
+                *     int val;
+                *     ListNode next;
+                *     ListNode(int x) { val = x; }
+                * }
+                */
+                class Solution {
+                    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+                        ListNode dummy = new ListNode(0);
+                        ListNode head = dummy;
+                        int carry = 0;
+                        while (l1 != null || l2 != null || carry != 0) {
+                            int sum = carry + (l1 == null ? 0 : l1.val) + (l2 == null ? 0 : l2.val);
+                            carry = sum/10;
+                            head.next = new ListNode(sum%10);
+                            head = head.next;
+                            l1 = (l1 == null ? l1 : l1.next);
+                            l2 = (l2 == null ? l2 : l2.next);
+                        }
+                        return dummy.next;
+                    }
+                }
+            '''
+        }
+        self.session.cookies.clear()
+        self.headers['content-type'] = 'application/json' 
+        response = self.session.post(self.submit_url, data=json.dumps(data), headers=self.headers)
+        print(response.text)
+        print(json.dumps(data))
+
+l = Leetcode('Clavier-Zhang', 'zyc990610')
+l.submit()
+
+
 # l.get_one_problem_by_title_slug('two-sum')
 # html = l.get_one_problem('two-sum')
 
 # soup = BeautifulSoup(html, features="html.parser")
 # print(soup.get_text())
+
+
 
