@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 s = requests.session()
 
-class leetcode:
+class Leetcode:
 
     session = None
 
@@ -124,12 +124,10 @@ class leetcode:
                 ''',
             'variables': json.dumps({'titleSlug': titleSlug})
         }
-        # data['variables'] = titleSlug
         response = s.post(self.graphql, data=data, headers=self.headers)
-        # print(response.text)
         return(response.json()['data']['question']['content'])
 
-l = leetcode('Clavier-Zhang', 'zyc990610')
+l = Leetcode('Clavier-Zhang', 'zyc990610')
 html = l.get_one_problem('two-sum')
 
 soup = BeautifulSoup(html, features="html.parser")

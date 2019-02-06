@@ -1,15 +1,17 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='leet',
+    name='pyleetcode',
     version='0.1',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
         'Click',
+        'bs4',
+        'requests',
     ],
     entry_points='''
         [console_scripts]
-        leet=src.yourscript:cli
+        ccc=src.commands:cli
     ''',
 )
