@@ -12,7 +12,6 @@ class Leetcode:
         'Origin': 'https://leetcode.com',
         'Referer': 'https://leetcode.com',
         'X-Requested-With': 'XMLHttpRequest',
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
     }
 
     login_url = 'https://leetcode.com/accounts/login/'
@@ -122,7 +121,6 @@ class Leetcode:
 
     def submit(self):
         data = {
-            'test_mode': 'false',
             'lang': 'java',
             'question_id': '2',
             'typed_code': '''
@@ -152,7 +150,6 @@ class Leetcode:
                 }
             '''
         }
-        self.headers['content-type'] = 'application/json' 
         response = self.session.post(self.submit_url, data=json.dumps(data), headers=self.headers)
         print(response.text)
     
