@@ -12,6 +12,8 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        ccc=src.commands:cli
+        leet=src.commands:leet
+        get=src.commands:get
+        test1=src.commands:test1
     ''',
 )

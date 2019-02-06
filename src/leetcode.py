@@ -127,8 +127,8 @@ class Leetcode:
         response = s.post(self.graphql, data=data, headers=self.headers)
         return(response.json()['data']['question']['content'])
 
-l = Leetcode('Clavier-Zhang', 'zyc990610')
-html = l.get_one_problem('two-sum')
+# l = Leetcode('Clavier-Zhang', 'zyc990610')
+# html = l.get_one_problem('two-sum')
 
-soup = BeautifulSoup(html, features="html.parser")
-print(soup.get_text())
+# soup = BeautifulSoup(html, features="html.parser")
+# print(soup.get_text())
