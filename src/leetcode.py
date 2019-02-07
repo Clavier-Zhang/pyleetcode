@@ -17,11 +17,7 @@ class Leetcode:
     login_url = 'https://leetcode.com/accounts/login/'
     graphql_url = 'https://leetcode.com/graphql'
     submit_url = 'https://leetcode.com/problems/add-two-numbers/submit/'
-
-    def init(self):
-        user = self.local.fetch_user()
-        self.headers['Cookie'] = 'LEETCODE_SESSION=' + user['session_id'] + ';csrftoken=' + user['csrf_token'] + ';'
-        self.headers['X-CSRFToken'] = user['csrf_token']
+    all_problems_url = 'https://leetcode.com/api/problems/algorithms/'
 
     def post(self, url, data):
         user = self.local.fetch_user()
@@ -88,14 +84,16 @@ class Leetcode:
                     status
                     difficulty
                     isPaidOnly
+                    likes
+                    dislikes
                 }
                 ''',
             'variables': {}
         }
-        response = self.session.post(self.graphql_url, data=data, headers=self.headers)
-        for q in response.json()['data']['allQuestions']:
-            print(q)
-        # print(response.json()['data']['allQuestions'])
+        # response = self.post(self.graphql_url, data)
+        response = self.session.get(self.all_problems_url)
+        self.local.save_all_problems(response.json()['stat_status_pairs'])
+        print(response.json())
 
     def get_one_problem_by_title_slug(self, titleSlug):
         data = {
@@ -108,6 +106,7 @@ class Leetcode:
                         difficulty
                         likes
                         dislikes
+                        status
                         similarQuestions
                         topicTags {
                             name
@@ -118,7 +117,6 @@ class Leetcode:
                             langSlug
                             code
                         }
-                        status
                         sampleTestCase
                     }
                 }
@@ -140,7 +138,4 @@ class Leetcode:
         return response.text
     
 
-# l = Leetcode()
-# l.login('Clavier-Zhang', 'zyc990610')
-# l.submit('1-two-sum.java')
 

@@ -5,9 +5,15 @@ import time
 
 class Local:
 
-    user = './data/user.json'
     path = os.path.dirname(os.path.abspath(__file__))+'/'
-    token_valid_time = 10000
+
+    user = './data/user.json'
+
+    problems = './data/problems.json'
+
+    token_valid_time = 3600*5
+
+    problems_valid_time = 3600*24*7
 
     def get_obj(self, filename):
         file = open(self.path+filename, 'r')
@@ -63,11 +69,21 @@ class Local:
         self.save_obj(self.user, {})
 
     def save_all_problems(self, problems):
-        if (problems == None):
-            return
-        fp = open('./data/problems.json', 'w')
-        json.dump(problems, fp)
-        fp.close()
+        data = {
+            'last_update_time': time.time(),
+            'problems': problems,
+        }
+        self.save_obj(self.problems, data)
 
     def fetch_all_problems(self):
-        return json.load(open('data/problems.json', 'r'))
+        return self.get_obj(self.path+self.problems)['problems']
+
+    def fetch_problems_status(self):
+        data = self.get_obj(self.path+self.problems)
+        if (data == None or type(data) != type(dict())):
+            return False
+        if ('problems' not in data or len(data['problems']) == 0):
+            return False
+        if (time.time()-data['last_update_time'] > self.problems_valid_time):
+            return False
+        return True

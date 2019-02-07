@@ -16,6 +16,7 @@ class Client:
             self.update_token()
 
     def login(self):
+        click.echo('You need to login first')
         username = click.prompt('Please enter your username')
         password = click.prompt('Please enter your password', hide_input=True)
         self.local.save_username_and_password(username, password)
@@ -28,3 +29,12 @@ class Client:
 
     def submit(self, filename):
         self.leetcode.submit(filename)
+
+    def show(self, start, end):
+        self.leetcode.get_all_problems()
+
+    def detail(self, question_id):
+        return
+    
+    def start(self, question_id):
+        return

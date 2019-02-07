@@ -15,5 +15,8 @@ setup(
         leet=src.commands:leet
         submit=src.commands:submit
         login=src.commands:login
+        show=src.commands:show
+        detail=src.commands:detail
+        start=src.commands:start
     ''',
 )
