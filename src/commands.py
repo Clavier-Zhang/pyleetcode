@@ -30,28 +30,32 @@ def submit(filename):
 @click.argument('end', default=50, type=click.IntRange(0, 2000))
 def show(start, end):
     """leet show 1 50"""
-    print("show")
     client.show(start, end)
 
 @click.command()
 @click.argument('question_id', default=1, type=click.IntRange(0, 2000))
 def detail(question_id):
     """leet detail 1"""
-    print("detail")
     client.detail(question_id)
 
 @click.command()
 @click.argument('question_id', default=1)
 def start(question_id):
-    """leet show 1 50"""
-    print("start")
-    print(question_id)
+    """leet start 1 50"""
+    client.start(question_id)
+
+@click.command()
+@click.argument('lang', default='java', type=click.Choice(['cpp', 'java', 'python', 'python3', 'c', 'csharp', 'javascript', 'ruby', 'swift', 'golang', 'scala', 'kotlin', 'rust', 'php']))
+def lang(lang):
+    """leet lang java"""
+    client.lang(lang)
 
 leet.add_command(submit)
 leet.add_command(login)
 leet.add_command(show)
 leet.add_command(detail)
 leet.add_command(start)
+leet.add_command(lang)
 
 if __name__ == '__main__':
     leet()

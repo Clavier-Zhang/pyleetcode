@@ -18,5 +18,6 @@ setup(
         show=src.commands:show
         detail=src.commands:detail
         start=src.commands:start
+        lang=src.commands:lang
     ''',
 )

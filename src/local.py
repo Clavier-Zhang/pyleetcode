@@ -17,6 +17,8 @@ class Local:
 
     problems_valid_time = 3600*24*7
 
+    langs = ['cpp', 'java', 'python', 'python3', 'c', 'csharp', 'javascript', 'ruby', 'swift', 'golang', 'scala', 'kotlin', 'rust', 'php']
+
     def get_obj(self, filename):
         file = open(self.path+filename, 'r')
         obj = json.load(file)
@@ -124,3 +126,21 @@ class Local:
     def fetch_one_problem_detail(self, question_id):
         problem_details = self.get_obj(self.problem_details)
         return problem_details[question_id]
+
+    def check_user_lang_status(self):
+        user = self.get_obj(self.user)
+        if (user == None or type(user) != type(dict())):
+            return False
+        if ('lang' not in user):
+            return False
+        if (user['lang'] not in self.langs):
+            return False
+        return True
+    
+    def save_user_lang(self, lang):
+        user = self.get_obj(self.user)
+        user['lang'] = lang
+        self.save_obj(self.user, user)
+
+    def fetch_user_lang(self):
+        return self.get_obj(self.user)['lang']
