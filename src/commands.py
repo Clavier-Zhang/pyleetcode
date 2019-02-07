@@ -6,12 +6,16 @@ client = Client()
 
 @click.group()
 def leet():
-    client.check_login()
-    return
+    try:  
+        client.check_login()
+    except Exception as e:
+        print(e)
+        quit()
+    
 
 @click.command()
 def login():
-    return
+    print('login')
 
 @click.command()
 @click.argument('filename')

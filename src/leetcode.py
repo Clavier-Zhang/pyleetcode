@@ -38,6 +38,9 @@ class Leetcode:
             'password': password
         }
         response = self.session.post(self.login_url, data=data, headers=self.headers)
+        if (response.status_code != 200):
+            self.local.clear_user()
+            raise Exception('Fail to login')
         csrf_token = self.get_cookie(self.session.cookies, 'csrftoken')
         session_id = self.get_cookie(self.session.cookies, 'LEETCODE_SESSION')
 
@@ -45,7 +48,6 @@ class Leetcode:
         
         self.headers['Cookie'] = 'LEETCODE_SESSION=' + session_id + ';csrftoken=' + csrf_token + ';'
         self.headers['X-CSRFToken'] = csrf_token
-        print(response.json())
 
     def get_user_info(self):
         data = {
