@@ -1,11 +1,12 @@
 import requests
 import json
 from bs4 import BeautifulSoup
-import time
+from .local import Local
 
 class Leetcode:
 
     session = requests.session()
+    local = Local()
 
     headers = {
         'Origin': 'https://leetcode.com',
@@ -37,10 +38,13 @@ class Leetcode:
             'password': password
         }
         response = self.session.post(self.login_url, data=data, headers=self.headers)
-        sessionCSRF = self.get_cookie(self.session.cookies, 'csrftoken')
+        csrf_token = self.get_cookie(self.session.cookies, 'csrftoken')
         session_id = self.get_cookie(self.session.cookies, 'LEETCODE_SESSION')
-        self.headers['Cookie'] = 'LEETCODE_SESSION=' + session_id + ';csrftoken=' + sessionCSRF + ';'
-        self.headers['X-CSRFToken'] = sessionCSRF
+
+        self.local.save_session_and_token(session_id, csrf_token)
+        
+        self.headers['Cookie'] = 'LEETCODE_SESSION=' + session_id + ';csrftoken=' + csrf_token + ';'
+        self.headers['X-CSRFToken'] = csrf_token
         print(response.json())
 
     def get_user_info(self):
@@ -134,7 +138,3 @@ class Leetcode:
 # l.login('Clavier-Zhang', 'zyc990610')
 # l.submit('1-two-sum.java')
 
-
-
-
-print(time.time())

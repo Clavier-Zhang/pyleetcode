@@ -14,6 +14,6 @@ setup(
         [console_scripts]
         leet=src.commands:leet
         submit=src.commands:submit
-        test1=src.commands:test1
+        login=src.commands:login
     ''',
 )

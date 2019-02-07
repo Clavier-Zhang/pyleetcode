@@ -6,8 +6,8 @@ client = Client()
 
 @click.group()
 def leet():
-    client.test()
-    pass
+    client.check_login()
+    return
 
 @click.command()
 def login():
@@ -16,6 +16,7 @@ def login():
 @click.command()
 @click.argument('filename')
 def submit(filename):
+    """Example script."""
     print("submit")
     l = Leetcode()
     l.login('Clavier-Zhang', 'zyc990610')
@@ -23,13 +24,9 @@ def submit(filename):
 
 
 
-@click.command()
-def test1():
-    """Example script."""
-    click.echo('Hello World!')
-
 leet.add_command(submit)
-leet.add_command(test1)
+leet.add_command(login)
+
 
 if __name__ == '__main__':
     leet()
