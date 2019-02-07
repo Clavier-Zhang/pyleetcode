@@ -1,12 +1,11 @@
 import requests
 import json
 from bs4 import BeautifulSoup
-
-s = requests.session()
+import time
 
 class Leetcode:
 
-    session = None
+    session = requests.session()
 
     headers = {
         'Origin': 'https://leetcode.com',
@@ -15,12 +14,8 @@ class Leetcode:
     }
 
     login_url = 'https://leetcode.com/accounts/login/'
-    graphql = 'https://leetcode.com/graphql'
+    graphql_url = 'https://leetcode.com/graphql'
     submit_url = 'https://leetcode.com/problems/add-two-numbers/submit/'
-
-    def __init__(self, username, password):
-        self.session = requests.session()
-        self.login(username, password)
 
     def get_cookie(self, cookies, attribute):
         cookies = str(cookies)
@@ -41,11 +36,12 @@ class Leetcode:
             'login': username,
             'password': password
         }
-        self.session.post(self.login_url, data=data, headers=self.headers)
+        response = self.session.post(self.login_url, data=data, headers=self.headers)
         sessionCSRF = self.get_cookie(self.session.cookies, 'csrftoken')
-        sessionId = self.get_cookie(self.session.cookies, 'LEETCODE_SESSION')
-        self.headers['Cookie'] = 'LEETCODE_SESSION=' + sessionId + ';csrftoken=' + sessionCSRF + ';'
+        session_id = self.get_cookie(self.session.cookies, 'LEETCODE_SESSION')
+        self.headers['Cookie'] = 'LEETCODE_SESSION=' + session_id + ';csrftoken=' + sessionCSRF + ';'
         self.headers['X-CSRFToken'] = sessionCSRF
+        print(response.json())
 
     def get_user_info(self):
         data = {
@@ -59,7 +55,7 @@ class Leetcode:
             ]),
             'variables': {}
         }
-        response = self.session.post(self.graphql, data=data, headers=self.headers)
+        response = self.session.post(self.graphql_url, data=data, headers=self.headers)
         
         print(response.json())
     
@@ -82,7 +78,7 @@ class Leetcode:
                 ''',
             'variables': {}
         }
-        response = self.session.post(self.graphql, data=data, headers=self.headers)
+        response = self.session.post(self.graphql_url, data=data, headers=self.headers)
         for q in response.json()['data']['allQuestions']:
             print(q)
         # print(response.json()['data']['allQuestions'])
@@ -115,7 +111,7 @@ class Leetcode:
             ''',
             'variables': json.dumps({'titleSlug': titleSlug})
         }
-        response = self.session.post(self.graphql, data=data, headers=self.headers)
+        response = self.session.post(self.graphql_url, data=data, headers=self.headers)
         print(response.json()['data']['question']['codeSnippets'][0]['code'])
         return(response.json()['data']['question']['content'])
 
@@ -134,9 +130,11 @@ class Leetcode:
         
     #     print(file_context)
 
-# l = Leetcode('Clavier-Zhang', 'zyc990610')
+# l = Leetcode()
+# l.login('Clavier-Zhang', 'zyc990610')
 # l.submit('1-two-sum.java')
 
 
 
 
+print(time.time())

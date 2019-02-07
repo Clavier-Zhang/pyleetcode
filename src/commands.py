@@ -1,16 +1,27 @@
 import click
 from .leetcode import Leetcode
+from .client import Client
+
+client = Client()
 
 @click.group()
 def leet():
+    client.test()
     pass
+
+@click.command()
+def login():
+    return
 
 @click.command()
 @click.argument('filename')
 def submit(filename):
     print("submit")
-    l = Leetcode('Clavier-Zhang', 'zyc990610')
+    l = Leetcode()
+    l.login('Clavier-Zhang', 'zyc990610')
     l.submit(filename)
+
+
 
 @click.command()
 def test1():
