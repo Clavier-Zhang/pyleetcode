@@ -70,30 +70,8 @@ class Leetcode:
         print(response.json())
     
     def get_all_problems(self):
-        data = {
-            'query': '''
-                query allQuestions {
-                    allQuestions {
-                        ...questionSummaryFields
-                    }
-                }
-                fragment questionSummaryFields on QuestionNode {
-                    title
-                    titleSlug
-                    questionId
-                    status
-                    difficulty
-                    isPaidOnly
-                    likes
-                    dislikes
-                }
-                ''',
-            'variables': {}
-        }
-        # response = self.post(self.graphql_url, data)
         response = self.session.get(self.all_problems_url)
         self.local.save_all_problems(response.json()['stat_status_pairs'])
-        print(response.json())
 
     def get_one_problem_by_title_slug(self, titleSlug):
         data = {
