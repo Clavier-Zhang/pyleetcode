@@ -2,6 +2,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 from .local import Local
+import time
 
 class Leetcode:
 
@@ -18,6 +19,8 @@ class Leetcode:
     graphql_url = 'https://leetcode.com/graphql'
     submit_url = 'https://leetcode.com/problems/add-two-numbers/submit/'
     all_problems_url = 'https://leetcode.com/api/problems/algorithms/'
+    test_url = 'https://leetcode.com/problems/add-two-numbers/interpret_solution/'
+    check_url = 'https://leetcode.com/submissions/detail/$ID/check/'
 
     def post(self, url, data):
         user = self.local.fetch_user()
@@ -110,9 +113,36 @@ class Leetcode:
             'question_id': filename[0:filename.index('-')],
             'typed_code': open(filename,'r').read()
         }
-        response = self.post(self.submit_url, json.dumps(data))
-        print(response.json())
-        return response.text
+        response = self.post(self.submit_url, json.dumps(data)).json()
+        print(response)
+        result = self.fetch_check_result(response['submission_id'])
+        print(result)
+        return response
     
+    def test(self, filename):
+        data = {
+            'data_input': "[2,4,3]\n[5,6,4]",
+            'judge_type': "large",
+            'lang': filename[filename.index('.')+1:len(filename)],
+            'question_id': filename[0:filename.index('-')],
+            'typed_code': open(filename,'r').read()
+        }
+        response = self.post(self.test_url, json.dumps(data)).json()
+        result = self.fetch_check_result(response['interpret_id'])
+        expected_result = self.fetch_check_result(response['interpret_expected_id'])
+        print(result)
+        print(expected_result)
+
+    def fetch_check_result(self, id):
+        count = 0
+        while count < 10:
+            result = self.session.get(self.check_url.replace('$ID', str(id))).json()
+            if (result['state'] == 'SUCCESS'):
+                return result
+            time.sleep(0.5)
+            count += 1
+        print('No response')
+        return None
+        
 
 

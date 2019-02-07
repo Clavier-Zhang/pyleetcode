@@ -50,12 +50,19 @@ def lang(lang):
     """leet lang java"""
     client.lang(lang)
 
+@click.command()
+@click.argument('filename')
+def test(filename):
+    """leet test 1-two-sum.java"""
+    client.test(filename)
+
 leet.add_command(submit)
 leet.add_command(login)
 leet.add_command(show)
 leet.add_command(detail)
 leet.add_command(start)
 leet.add_command(lang)
+leet.add_command(test)
 
 if __name__ == '__main__':
     leet()

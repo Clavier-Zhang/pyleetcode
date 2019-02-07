@@ -94,6 +94,8 @@ class Client:
             if code_template['langSlug'] == lang:
                 self.system.generate_code_file(str(question_id)+'-'+problem_slug, lang, code_template['code'])
 
-
     def lang(self, lang):
         self.local.save_user_lang(lang)
+
+    def test(self, filename):
+        self.leetcode.test(filename)
