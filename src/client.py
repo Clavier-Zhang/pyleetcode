@@ -6,7 +6,7 @@ import click
 class Client:
 
     local = Local()
-    
+
     leetcode = Leetcode()
 
     def check_login(self):
@@ -25,3 +25,6 @@ class Client:
     def update_token(self):
         user = self.local.fetch_user()
         self.leetcode.login(user['username'], user['password'])
+
+    def submit(self, filename):
+        self.leetcode.submit(filename)

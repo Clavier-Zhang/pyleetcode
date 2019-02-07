@@ -15,12 +15,12 @@ def leet():
 
 @click.command()
 def login():
-    print('login')
+    pass
 
 @click.command()
 @click.argument('filename')
 def submit(filename):
-    """Example script."""
+    """leet submit 1-two-sum.java"""
     print("submit")
     l = Leetcode()
     l.login('Clavier-Zhang', 'zyc990610')

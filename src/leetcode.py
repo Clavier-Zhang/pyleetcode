@@ -18,6 +18,18 @@ class Leetcode:
     graphql_url = 'https://leetcode.com/graphql'
     submit_url = 'https://leetcode.com/problems/add-two-numbers/submit/'
 
+    def init(self):
+        user = self.local.fetch_user()
+        self.headers['Cookie'] = 'LEETCODE_SESSION=' + user['session_id'] + ';csrftoken=' + user['csrf_token'] + ';'
+        self.headers['X-CSRFToken'] = user['csrf_token']
+
+    def post(self, url, data):
+        user = self.local.fetch_user()
+        self.headers['Cookie'] = 'LEETCODE_SESSION=' + user['session_id'] + ';csrftoken=' + user['csrf_token'] + ';'
+        self.headers['X-CSRFToken'] = user['csrf_token']
+        response = self.session.post(url, data=data, headers=self.headers)
+        return response
+
     def get_cookie(self, cookies, attribute):
         cookies = str(cookies)
         start = cookies.index(attribute)+1+len(attribute)
@@ -43,12 +55,8 @@ class Leetcode:
             raise Exception('Fail to login')
         csrf_token = self.get_cookie(self.session.cookies, 'csrftoken')
         session_id = self.get_cookie(self.session.cookies, 'LEETCODE_SESSION')
-
         self.local.save_session_and_token(session_id, csrf_token)
         
-        self.headers['Cookie'] = 'LEETCODE_SESSION=' + session_id + ';csrftoken=' + csrf_token + ';'
-        self.headers['X-CSRFToken'] = csrf_token
-
     def get_user_info(self):
         data = {
             'query': '\n'.join([
@@ -122,19 +130,15 @@ class Leetcode:
         return(response.json()['data']['question']['content'])
 
     def submit(self, filename):
-        # typed_code = open(filename,'r').read()
         data = {
-            'lang': 'java',
-            'question_id': '2',
+            'lang': filename[filename.index('.')+1:len(filename)],
+            'question_id': filename[0:filename.index('-')],
             'typed_code': open(filename,'r').read()
         }
-        response = self.session.post(self.submit_url, data=json.dumps(data), headers=self.headers)
+        response = self.post(self.submit_url, json.dumps(data))
         print(response.json())
-        return response.json()['submission_id']
+        return response.text
     
-    # def test(self):
-        
-    #     print(file_context)
 
 # l = Leetcode()
 # l.login('Clavier-Zhang', 'zyc990610')
