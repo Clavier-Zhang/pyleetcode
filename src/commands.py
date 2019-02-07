@@ -26,22 +26,19 @@ def submit(filename):
     client.submit(filename)
 
 @click.command()
-@click.argument('start', default=1)
-@click.argument('end', default=50)
+@click.argument('start', default=1, type=click.IntRange(0, 2000))
+@click.argument('end', default=50, type=click.IntRange(0, 2000))
 def show(start, end):
     """leet show 1 50"""
     print("show")
-
-    print(start)
-    print(end)
     client.show(start, end)
 
 @click.command()
-@click.argument('question_id', default=1)
+@click.argument('question_id', default=1, type=click.IntRange(0, 2000))
 def detail(question_id):
-    """leet show 1 50"""
+    """leet detail 1"""
     print("detail")
-    print(question_id)
+    client.detail(question_id)
 
 @click.command()
 @click.argument('question_id', default=1)

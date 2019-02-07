@@ -31,10 +31,28 @@ class Client:
         self.leetcode.submit(filename)
 
     def show(self, start, end):
-        self.leetcode.get_all_problems()
+        if not self.local.check_problems_status():
+            self.leetcode.get_all_problems()
+        print(self.local.fetch_problems_with_range(start, end))
+        
 
     def detail(self, question_id):
-        return
+        # check the index of problems
+        if not self.local.check_problems_status():
+            self.leetcode.get_all_problems()
+        # use the problem index to convert question_id to title_slug
+        problem_summary = self.local.fetch_problem_by_id(question_id)
+        if (problem_summary == None):
+            print("the problem does not exist")
+            return
+        problem_slug = problem_summary['stat']['question__article__slug']
+        # if the detail is not in the cache, fetch from leetcode
+        if not self.local.check_problem_details_status(question_id):
+            print('detail not in the cache, fetch from leetcode')
+            self.leetcode.get_one_problem_by_title_slug(problem_slug)
+
+        question_detail = self.local.fetch_one_problem_detail(question_id)
+        print(question_detail)
     
     def start(self, question_id):
         return

@@ -11,6 +11,8 @@ class Local:
 
     problems = './data/problems.json'
 
+    problem_details = './data/problem_details.json'
+
     token_valid_time = 3600*5
 
     problems_valid_time = 3600*24*7
@@ -69,17 +71,31 @@ class Local:
         self.save_obj(self.user, {})
 
     def save_all_problems(self, problems):
+        problem_list = [None]*2000
+        for problem in problems:
+            problem_list[problem['stat']['question_id']] = problem
         data = {
             'last_update_time': time.time(),
-            'problems': problems,
+            'problems': problem_list,
         }
         self.save_obj(self.problems, data)
 
     def fetch_all_problems(self):
-        return self.get_obj(self.path+self.problems)['problems']
+        return self.get_obj(self.problems)['problems']
 
-    def fetch_problems_status(self):
-        data = self.get_obj(self.path+self.problems)
+    def fetch_problems_with_range(self, start, end):
+        results = []
+        problems = self.get_obj(self.problems)['problems']
+        for i in range(start, end+1):
+            results.append(problems[i])
+        return results
+
+    def fetch_problem_by_id(self, question_id):
+        problems = self.get_obj(self.problems)['problems']
+        return problems[question_id]
+
+    def check_problems_status(self):
+        data = self.get_obj(self.problems)
         if (data == None or type(data) != type(dict())):
             return False
         if ('problems' not in data or len(data['problems']) == 0):
@@ -87,3 +103,24 @@ class Local:
         if (time.time()-data['last_update_time'] > self.problems_valid_time):
             return False
         return True
+
+    def check_problem_details_status(self, question_id):
+        data = self.get_obj(self.problem_details)
+        if data == None or type(data) != type(list()):
+            return False
+        if (len(data) == 0):
+            return False
+        if data[question_id] == None:
+            return False
+        return True
+
+    def save_one_problem_detail(self, problem_detail):
+        problem_details = self.get_obj(self.problem_details)
+        if problem_detail == None or type(problem_details) != type(list()):
+            problem_details = [None]*2000
+        problem_details[int(problem_detail['questionId'])] = problem_detail
+        self.save_obj(self.problem_details, problem_details)
+
+    def fetch_one_problem_detail(self, question_id):
+        problem_details = self.get_obj(self.problem_details)
+        return problem_details[question_id]
