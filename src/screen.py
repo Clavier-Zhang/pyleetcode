@@ -5,10 +5,10 @@ class Screen:
 
     # helper methods
     def space(self, s, size):
-        return ('{:'+str(size)+'}').format(s)
+        return ('{:'+str(size)+'}').format(str(s))
 
     def dash(self, s, size):
-        return ('{:-<'+str(size)+'}').format(s)
+        return ('{:-<'+str(size)+'}').format(str(s))
 
     def print_difficulty(self, difficulty):
         if difficulty == 1 or difficulty == 'Easy':
@@ -37,10 +37,35 @@ class Screen:
             click.secho(self.space('', 3), fg='bright_cyan', nl=False)
     
     def print_content(self, content):
+        click.secho('', fg='bright_white')
         content =  BeautifulSoup(content, "html.parser")
         content = content.get_text().replace('Example:\n', '\nExample:')
-        click.secho(content, fg='bright_white')
+        content = content.replace('Note:\n', '\nNote:')
+        click.secho('Description:', fg='bright_blue')
+        for line in content.splitlines():
+            if line == 'Example:' or line == 'Note:':
+                click.secho(line, fg='bright_blue')
+            else:
+                click.secho(line, fg='bright_white')
+        click.secho('', fg='bright_white')
+
+    def print_likes_and_dislikes(self, likes, dislikes):
+        click.secho(str(likes)+' ', fg='bright_green', nl=False)
+        click.secho(self.space('likes', 6), fg='bright_green', nl=False)
+        click.secho(str(dislikes)+' ', fg='bright_red', nl=False)
+        click.secho(self.space('dislikes', 9), fg='bright_red', nl=False)
+
+    def print_topic_tages(self, topic_tags):
+        click.secho('Topic: ', nl=False, fg='blue')
+        for topic_tag in topic_tags:
+            click.secho('['+topic_tag['name']+'] ', nl=False, fg='bright_cyan')
+        click.secho('')
         
+
+    def print_sample_testcase(self, testcase):
+        click.secho('Sample Test Case:', fg='bright_blue')
+        print(testcase)
+
     # question methods
     def print_question_summarys(self, question_summarys):
         for question_summary in question_summarys:
@@ -63,20 +88,31 @@ class Screen:
             click.secho('', fg='bright_white')
 
     def print_question_detail(self, question_detail):
-        question_id = self.space(question_detail['questionId'], 5)
-        title = self.space(question_detail['title'], 55)
+
+        question_id = self.space(question_detail['questionId'] ,5)
+        title = question_detail['title']+' '
         difficulty = question_detail['difficulty']
+
         likes = question_detail['likes']
         dislikes = question_detail['dislikes']
+
         status = question_detail['status']
+
         topicTags = question_detail['topicTags']
 
         content = question_detail['content']
 
         sampleTestCase = question_detail['sampleTestCase']
 
-        click.secho(question_id, fg='bright_white', nl=False)
-        click.secho(title, fg='bright_white', nl=False)
-        print(difficulty)
+        click.secho('Question '+str(question_id), fg='bright_yellow')
+        click.secho(title, fg='bright_cyan')
+
+        self.print_difficulty(difficulty)
+        self.print_likes_and_dislikes(likes, dislikes)
+        self.print_status(status)
+        click.secho('', fg='bright_white')
+
+        self.print_topic_tages(topicTags)
+
         self.print_content(content)
-        print(sampleTestCase)
+        self.print_sample_testcase(sampleTestCase)

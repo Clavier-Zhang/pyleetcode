@@ -117,7 +117,6 @@ class Leetcode:
             'variables': json.dumps({'titleSlug': titleSlug})
         }
         response = self.post(self.graphql_url, data=data)
-        print(response.json())
         self.cache.save_question_detail(response.json()['data']['question'])
 
     def submit(self, filename):
