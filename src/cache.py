@@ -26,7 +26,7 @@ class Cache:
         if not Path(self.path+self.user).is_file():
             open(self.path+self.user, 'w').write('{'+'}')
         if not Path(self.path+self.question_index).is_file():
-            open(self.path+self.question_details, 'w').write('[]')
+            open(self.path+self.question_index, 'w').write('[]')
         if not Path(self.path+self.question_details).is_file():
             open(self.path+self.question_details, 'w').write('[]')
 
