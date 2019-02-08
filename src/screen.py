@@ -10,6 +10,12 @@ class Screen:
     def new_line(self):
         click.secho('')
 
+    def print_success(self, text):
+        click.secho(str(text), fg='bright_green')
+
+    def print_fail(self, text):
+        click.secho(str(text), fg='bright_red')
+
     def dash(self, s, size):
         return ('{:-<'+str(size)+'}').format(str(s))
 
@@ -69,6 +75,33 @@ class Screen:
     def print_sample_testcase(self, testcase):
         click.secho('Sample Test Case:', fg='bright_blue')
         click.secho(testcase)
+
+    def print_runtime(self, runtime, percentile):
+        click.secho('Runtime: ', fg='bright_white', nl=False)
+        click.secho(str(runtime)+', ', fg='bright_cyan', nl=False)
+        click.secho('faster than ', fg='bright_white', nl=False)
+        click.secho(str(int(percentile))+'%', fg='bright_cyan', nl=False)
+        click.secho(' submissions', fg='bright_white')
+    
+    def print_memory(self, memory, percentile):
+        click.secho('Memory Usage: ', fg='bright_white', nl=False)
+        click.secho(str(memory)+', ', fg='bright_cyan', nl=False)
+        click.secho('less than ', fg='bright_white', nl=False)
+        click.secho(str(int(percentile))+'%', fg='bright_cyan', nl=False)
+        click.secho(' submissions', fg='bright_white')
+
+    def print_input(self, code_input):
+        click.secho(self.space('Input:', 10)+str(code_input), fg='bright_white')
+
+    def print_output(self, output):
+        click.secho(self.space('Ouput:', 10)+str(output), fg='bright_white')
+    
+    def print_std_output(self, output):
+        if output != None and output != '':
+            click.secho(self.space('Stdout:', 10)+str(output), fg='bright_white')
+
+    def print_expected(self, expected):
+        click.secho(self.space('Expected:', 10)+str(expected), fg='bright_white')
 
     # question methods
     def print_question_summarys(self, question_summarys):
@@ -139,3 +172,84 @@ class Screen:
 
     def print_generate_code_template_message(self, filename, lang):
         click.secho('Generate '+lang+' code template '+filename, fg='bright_white')
+
+    # test results
+    def print_compare_test_result(self, test_result, expected_test_result):
+        status_code = test_result['status_code']
+        
+
+        if status_code == 10:
+            code_answer = test_result['code_answer'][0]
+            correct_answer = expected_test_result['code_answer'][0]
+            if code_answer == correct_answer:
+                self.print_success('Pass the test')
+            else:
+                self.print_fail('Fail the test')
+            click.secho(self.space('Output:', 10), fg='bright_white', nl=False)
+            click.secho(code_answer, fg='bright_white')
+            click.secho(self.space('Expected:', 10), fg='bright_white', nl=False)
+            click.secho(correct_answer, fg='bright_white')
+
+
+        elif status_code == 20:
+            self.print_fail('Compile Error')
+            print(test_result['full_compile_error'])
+
+        elif status_code == 14:
+            self.print_fail('Runtime Error')
+            print(test_result['runtime_error'])
+
+        else:
+            print('Unknown error')
+
+    def print_submit_result(self, submit_result):
+        status_code = submit_result['status_code']
+        status_msg = submit_result['status_msg']
+
+        if status_code == 10:
+            status_runtime = submit_result['status_runtime']
+            status_memory = submit_result['status_memory']
+            total_testcases = submit_result['total_testcases']
+            runtime_percentile = submit_result['runtime_percentile']
+            memory_percentile = submit_result['memory_percentile']
+            self.print_success(status_msg)
+            self.print_runtime(status_runtime, runtime_percentile)
+            self.print_memory(status_memory, memory_percentile)
+
+        if status_code == 11:
+            self.print_fail(status_msg)
+            code_input = submit_result['input_formatted']
+            std_output = submit_result['std_output']
+            code_output = submit_result['code_output']
+            expected_output = submit_result['expected_output']
+            self.print_input(code_input)
+            self.print_output(code_output)
+            self.print_expected(expected_output)
+            self.print_std_output(std_output)
+
+        if status_code == 14:
+            self.print_fail(status_msg)
+            last_testcase = submit_result['last_testcase'].replace('\n', ', ')
+            std_output = submit_result['std_output']
+            self.print_input(last_testcase)
+            self.print_std_output(std_output)
+            
+        if status_code == 20:
+            self.print_fail(status_msg)
+            full_compile_error = submit_result['full_compile_error']
+            click.secho(full_compile_error, fg='bright_white')
+
+        else:
+            print('Unknown error')
+            print(submit_result)
+
+        # elif status_code == 20:
+        #     print('Compile Error')
+        #     print(test_result['full_compile_error'])
+
+        # elif status_code == 14:
+        #     print('Runtime Error')
+        #     print(test_result['runtime_error'])
+
+        # else:
+        #     print('Unknown error')

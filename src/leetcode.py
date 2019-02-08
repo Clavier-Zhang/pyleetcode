@@ -1,14 +1,19 @@
 from .cache import Cache
+from .config import urls
+from .system import System
+from .screen import Screen
 import requests
 import json
 from bs4 import BeautifulSoup
 import time
-from .config import urls
+
 
 class Leetcode:
 
     session = requests.session()
     cache = Cache()
+    system = System()
+    screen = Screen()
 
     headers = {
         'Origin': 'https://leetcode.com',
@@ -117,31 +122,28 @@ class Leetcode:
         data = {
             'lang': filename[filename.index('.')+1:len(filename)],
             'question_id': filename[0:filename.index('-')],
-            'typed_code': open(filename,'r').read()
+            'typed_code': self.system.get_solution(filename),
         }
         response = self.post(urls['submit'], json.dumps(data)).json()
-        print(response)
         result = self.fetch_check_result(response['submission_id'])
-        print(result)
-        return response
+        self.screen.print_submit_result(result)
     
     def test(self, filename):
         data = {
-            'data_input': "[2,4,3]\n[5,6,4]",
+            'data_input': self.system.get_test_case(filename),
             'judge_type': "large",
             'lang': filename[filename.index('.')+1:len(filename)],
             'question_id': filename[0:filename.index('-')],
-            'typed_code': open(filename,'r').read()
+            'typed_code': self.system.get_solution(filename),
         }
         response = self.post(urls['test'], json.dumps(data)).json()
-        result = self.fetch_check_result(response['interpret_id'])
-        expected_result = self.fetch_check_result(response['interpret_expected_id'])
-        print(result)
-        print(expected_result)
+        test_result = self.fetch_check_result(response['interpret_id'])
+        expected_test_result = self.fetch_check_result(response['interpret_expected_id'])
+        self.screen.print_compare_test_result(test_result, expected_test_result)
 
     def fetch_check_result(self, id):
         count = 0
-        while count < 10:
+        while count < 30:
             result = self.session.get(urls['check'].replace('$ID', str(id))).json()
             if (result['state'] == 'SUCCESS'):
                 return result

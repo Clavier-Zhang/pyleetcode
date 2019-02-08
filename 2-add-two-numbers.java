@@ -11,7 +11,7 @@ class Solution {
         ListNode dummy = new ListNode(0);
         ListNode head = dummy;
         int carry = 0;
-        while (l1 != null || l2 != null || carry != 0) {
+        while (l1 != nll || l2 != null || carry != 0) {
             int sum = carry + (l1 == null ? 0 : l1.val) + (l2 == null ? 0 : l2.val);
             carry = sum/10;
             head.next = new ListNode(sum%10);
@@ -19,6 +19,13 @@ class Solution {
             l1 = (l1 == null ? l1 : l1.next);
             l2 = (l2 == null ? l2 : l2.next);
         }
-        return dummy.next;
+        return dummy;
     }
 }
+/**
+ * Test Area
+ * This will not be submitted to Leetcode
+ * Sample Test Case:
+ * [2,4,3]
+ * [5,6,4]
+ */
