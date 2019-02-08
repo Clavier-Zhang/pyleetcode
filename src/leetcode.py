@@ -3,6 +3,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import time
+from .config import urls
 
 class Leetcode:
 
@@ -14,13 +15,6 @@ class Leetcode:
         'Referer': 'https://leetcode.com',
         'X-Requested-With': 'XMLHttpRequest',
     }
-
-    login_url = 'https://leetcode.com/accounts/login/'
-    graphql_url = 'https://leetcode.com/graphql'
-    submit_url = 'https://leetcode.com/problems/add-two-numbers/submit/'
-    all_problems_url = 'https://leetcode.com/api/problems/algorithms/'
-    test_url = 'https://leetcode.com/problems/add-two-numbers/interpret_solution/'
-    check_url = 'https://leetcode.com/submissions/detail/$ID/check/'
 
     # helper methods
     def post(self, url, data):
@@ -47,7 +41,7 @@ class Leetcode:
         return cookies[0:start]
     
     def fetch_first_CSRFtoken(self):
-        response = self.session.head(self.login_url)
+        response = self.session.head(urls['login'])
         return self.get_cookie(response.cookies, 'csrftoken')
 
     # user methods
@@ -59,7 +53,7 @@ class Leetcode:
             'login': username,
             'password': password
         }
-        response = self.session.post(self.login_url, data=data, headers=self.headers)
+        response = self.session.post(urls[login], data=data, headers=self.headers)
         if (response.status_code != 200):
             self.cache.clear_user()
             return False
@@ -80,12 +74,12 @@ class Leetcode:
             ]),
             'variables': {}
         }
-        response = self.session.post(self.graphql_url, data=data, headers=self.headers)
+        response = self.session.post(urls['graphql'], data=data, headers=self.headers)
         
         print(response.json())
     
     def get_all_problems(self):
-        response = self.get(self.all_problems_url)
+        response = self.get(urls['all_problems'])
         self.cache.save_all_questions(response.json()['stat_status_pairs'])
 
     def get_one_problem_by_title_slug(self, titleSlug):
@@ -116,7 +110,8 @@ class Leetcode:
             ''',
             'variables': json.dumps({'titleSlug': titleSlug})
         }
-        response = self.post(self.graphql_url, data=data)
+        response = self.post(urls['graphql'], data=data)
+        print(response.json())
         self.cache.save_question_detail(response.json()['data']['question'])
 
     def submit(self, filename):
@@ -125,7 +120,7 @@ class Leetcode:
             'question_id': filename[0:filename.index('-')],
             'typed_code': open(filename,'r').read()
         }
-        response = self.post(self.submit_url, json.dumps(data)).json()
+        response = self.post(urls['submit'], json.dumps(data)).json()
         print(response)
         result = self.fetch_check_result(response['submission_id'])
         print(result)
@@ -139,7 +134,7 @@ class Leetcode:
             'question_id': filename[0:filename.index('-')],
             'typed_code': open(filename,'r').read()
         }
-        response = self.post(self.test_url, json.dumps(data)).json()
+        response = self.post(urls['test'], json.dumps(data)).json()
         result = self.fetch_check_result(response['interpret_id'])
         expected_result = self.fetch_check_result(response['interpret_expected_id'])
         print(result)
@@ -148,7 +143,7 @@ class Leetcode:
     def fetch_check_result(self, id):
         count = 0
         while count < 10:
-            result = self.session.get(self.check_url.replace('$ID', str(id))).json()
+            result = self.session.get(urls['check'].replace('$ID', str(id))).json()
             if (result['state'] == 'SUCCESS'):
                 return result
             time.sleep(0.5)

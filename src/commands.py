@@ -9,9 +9,22 @@ client = Client()
 def leet():
     client.check_login()
 
+
 @click.command()
 def login():
     pass
+
+@click.command()
+def logout():
+    client.logout()
+
+@click.command()
+@click.argument('lang', default='java', type=click.Choice(lang_dict))
+def lang(lang):
+    """leet lang java"""
+    client.lang(lang)
+
+
 
 @click.command()
 @click.argument('filename')
@@ -38,11 +51,6 @@ def start(question_id):
     """leet start 1 50"""
     client.start(question_id)
 
-@click.command()
-@click.argument('lang', default='java', type=click.Choice(lang_dict))
-def lang(lang):
-    """leet lang java"""
-    client.lang(lang)
 
 @click.command()
 @click.argument('filename')
@@ -50,10 +58,15 @@ def test(filename):
     """leet test 1-two-sum.java"""
     client.test(filename)
 
-leet.add_command(submit)
+
 leet.add_command(login)
+leet.add_command(logout)
+leet.add_command(lang)
+
 leet.add_command(show)
 leet.add_command(detail)
 leet.add_command(start)
-leet.add_command(lang)
+
 leet.add_command(test)
+leet.add_command(submit)
+

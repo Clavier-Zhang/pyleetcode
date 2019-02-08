@@ -6,6 +6,9 @@ class Screen:
     # helper methods
     def space(self, s, size):
         return ('{:'+str(size)+'}').format(str(s))
+    
+    def new_line(self):
+        click.secho('')
 
     def dash(self, s, size):
         return ('{:-<'+str(size)+'}').format(str(s))
@@ -40,10 +43,12 @@ class Screen:
         click.secho('', fg='bright_white')
         content =  BeautifulSoup(content, "html.parser")
         content = content.get_text().replace('Example:\n', '\nExample:')
+        content = content.replace('Example 1:\n', '\nExample 1:')
+        content = content.replace('Example 2:\n', '\nExample 2:')
         content = content.replace('Note:\n', '\nNote:')
         click.secho('Description:', fg='bright_blue')
         for line in content.splitlines():
-            if line == 'Example:' or line == 'Note:':
+            if line == 'Example:' or line == 'Note:' or line == 'Example 1:' or line == 'Example 2:':
                 click.secho(line, fg='bright_blue')
             else:
                 click.secho(line, fg='bright_white')
@@ -59,12 +64,11 @@ class Screen:
         click.secho('Topic: ', nl=False, fg='blue')
         for topic_tag in topic_tags:
             click.secho('['+topic_tag['name']+'] ', nl=False, fg='bright_cyan')
-        click.secho('')
-        
+        click.secho('')  
 
     def print_sample_testcase(self, testcase):
         click.secho('Sample Test Case:', fg='bright_blue')
-        print(testcase)
+        click.secho(testcase)
 
     # question methods
     def print_question_summarys(self, question_summarys):
@@ -116,3 +120,22 @@ class Screen:
 
         self.print_content(content)
         self.print_sample_testcase(sampleTestCase)
+
+    # message
+    def print_login_request_message(self):
+        click.secho('Login:', fg='bright_white')
+
+    def print_login_success_message(self):
+        click.secho('Login success', fg='bright_white')
+
+    def print_login_fail_message(self):
+        click.secho('Login fail, try agin', fg='bright_white')
+
+    def print_logout_success_message(self):
+        click.secho('Logout success', fg='bright_white')
+
+    def print_update_lang_message(self, lang):
+        click.secho('Update language to '+lang, fg='bright_white')
+
+    def print_generate_code_template_message(self, filename, lang):
+        click.secho('Generate '+lang+' code template '+filename, fg='bright_white')

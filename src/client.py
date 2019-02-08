@@ -26,17 +26,28 @@ class Client:
 
     def login(self):
         while True:
-            click.echo('You need to login first')
             username = click.prompt('Please enter your username')
             password = click.prompt('Please enter your password', hide_input=True)
             self.cache.save_username_and_password(username, password)
             if self.leetcode.login(username, password):
+                self.screen.print_login_success_message()
                 break
+            else:
+                self.screen.print_login_fail_message()
 
+    def logout(self):
+        self.cache.clear_user()
+        self.screen.print_logout_success_message()
+        
     def update_token(self):
         username = self.cache.get_user_username()
         password = self.cache.get_user_password()
         return self.leetcode.login(username, password)
+
+    def lang(self, lang):
+        self.cache.save_user_lang(lang)
+        self.screen.print_update_lang_message(lang)
+
 
     # question methods
     def submit(self, filename):
@@ -94,15 +105,10 @@ class Client:
         question_detail = self.cache.get_question_detail_by_question_id(question_id)
         if question_detail == None:
             return
-
-        print(question_detail)
         code_templates = question_detail['codeSnippets']
         for code_template in code_templates:
             if code_template['langSlug'] == lang:
                 self.system.generate_code_file(str(question_id)+'-'+problem_slug, lang, code_template['code'])
-
-    def lang(self, lang):
-        self.cache.save_user_lang(lang)
 
     def test(self, filename):
         self.leetcode.test(filename)

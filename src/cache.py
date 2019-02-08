@@ -53,8 +53,6 @@ class Cache:
         if (user['session_id'] == '' or user['csrf_token'] == ''):
             return False
         if (time.time() - user['login_time'] > self.token_valid_time):
-            # gonna replace with screen printer
-            print('the token has expired')
             return False
         return True
 

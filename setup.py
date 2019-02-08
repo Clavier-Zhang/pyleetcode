@@ -16,6 +16,7 @@ setup(
         leet=src.commands:leet
         submit=src.commands:submit
         login=src.commands:login
+        logout=src.commands:logout
         show=src.commands:show
         detail=src.commands:detail
         start=src.commands:start
