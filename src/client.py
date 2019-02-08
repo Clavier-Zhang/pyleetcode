@@ -106,9 +106,10 @@ class Client:
         if question_detail == None:
             return
         code_templates = question_detail['codeSnippets']
+        sample_test_case = question_detail['sampleTestCase']
         for code_template in code_templates:
             if code_template['langSlug'] == lang:
-                self.system.generate_code_file(str(question_id)+'-'+problem_slug, lang, code_template['code'])
+                self.system.generate_code_file(str(question_id)+'-'+problem_slug, lang, code_template['code'], sample_test_case)
 
     def test(self, filename):
         self.leetcode.test(filename)
