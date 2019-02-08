@@ -1,13 +1,13 @@
+from .cache import Cache
 import requests
 import json
 from bs4 import BeautifulSoup
-from .local import Local
 import time
 
 class Leetcode:
 
     session = requests.session()
-    local = Local()
+    cache = Cache()
 
     headers = {
         'Origin': 'https://leetcode.com',
@@ -23,9 +23,10 @@ class Leetcode:
     check_url = 'https://leetcode.com/submissions/detail/$ID/check/'
 
     def post(self, url, data):
-        user = self.local.fetch_user()
-        self.headers['Cookie'] = 'LEETCODE_SESSION=' + user['session_id'] + ';csrftoken=' + user['csrf_token'] + ';'
-        self.headers['X-CSRFToken'] = user['csrf_token']
+        session_id = self.cache.get_user_session_id()
+        csrf_token = self.cache.get_user_csrf_token()
+        self.headers['Cookie'] = 'LEETCODE_SESSION=' + session_id + ';csrftoken=' + csrf_token + ';'
+        self.headers['X-CSRFToken'] = csrf_token
         response = self.session.post(url, data=data, headers=self.headers)
         return response
 
@@ -50,11 +51,11 @@ class Leetcode:
         }
         response = self.session.post(self.login_url, data=data, headers=self.headers)
         if (response.status_code != 200):
-            self.local.clear_user()
+            self.cache.clear_user()
             raise Exception('Fail to login')
         csrf_token = self.get_cookie(self.session.cookies, 'csrftoken')
         session_id = self.get_cookie(self.session.cookies, 'LEETCODE_SESSION')
-        self.local.save_session_and_token(session_id, csrf_token)
+        self.cache.save_session_and_token(session_id, csrf_token)
         
     def get_user_info(self):
         data = {
@@ -74,7 +75,7 @@ class Leetcode:
     
     def get_all_problems(self):
         response = self.session.get(self.all_problems_url)
-        self.local.save_all_problems(response.json()['stat_status_pairs'])
+        self.cache.save_all_questions(response.json()['stat_status_pairs'])
 
     def get_one_problem_by_title_slug(self, titleSlug):
         data = {
@@ -105,7 +106,7 @@ class Leetcode:
             'variables': json.dumps({'titleSlug': titleSlug})
         }
         response = self.post(self.graphql_url, data=data)
-        self.local.save_one_problem_detail(response.json()['data']['question'])
+        self.cache.save_question_detail(response.json()['data']['question'])
 
     def submit(self, filename):
         data = {
