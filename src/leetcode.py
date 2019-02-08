@@ -22,6 +22,7 @@ class Leetcode:
     test_url = 'https://leetcode.com/problems/add-two-numbers/interpret_solution/'
     check_url = 'https://leetcode.com/submissions/detail/$ID/check/'
 
+    # helper methods
     def post(self, url, data):
         session_id = self.cache.get_user_session_id()
         csrf_token = self.cache.get_user_csrf_token()
@@ -37,12 +38,13 @@ class Leetcode:
         start = cookies.index(' ')
         return cookies[0:start]
     
-    def get_first_CSRFtoken(self):
+    def fetch_first_CSRFtoken(self):
         response = self.session.head(self.login_url)
         return self.get_cookie(response.cookies, 'csrftoken')
 
+    # user methods
     def login(self, username, password):
-        CSRFtoken = self.get_first_CSRFtoken()
+        CSRFtoken = self.fetch_first_CSRFtoken()
         self.headers['Cookie'] = 'csrftoken=' + CSRFtoken + ';'
         data = {
             'csrfmiddlewaretoken': CSRFtoken,
@@ -52,10 +54,11 @@ class Leetcode:
         response = self.session.post(self.login_url, data=data, headers=self.headers)
         if (response.status_code != 200):
             self.cache.clear_user()
-            raise Exception('Fail to login')
+            return False
         csrf_token = self.get_cookie(self.session.cookies, 'csrftoken')
         session_id = self.get_cookie(self.session.cookies, 'LEETCODE_SESSION')
         self.cache.save_session_and_token(session_id, csrf_token)
+        return True
         
     def get_user_info(self):
         data = {

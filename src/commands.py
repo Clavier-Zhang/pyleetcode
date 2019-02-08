@@ -1,19 +1,13 @@
 import click
 from .leetcode import Leetcode
 from .client import Client
+from .config import lang_dict
 
 client = Client()
 
 @click.group()
 def leet():
-    result = True
-    try:  
-        client.check_login()
-    except Exception as e:
-        print(e)
-        quit()
-    if (not result):
-        quit()
+    client.check_login()
 
 @click.command()
 def login():
@@ -45,7 +39,7 @@ def start(question_id):
     client.start(question_id)
 
 @click.command()
-@click.argument('lang', default='java', type=click.Choice(['cpp', 'java', 'python', 'python3', 'c', 'csharp', 'javascript', 'ruby', 'swift', 'golang', 'scala', 'kotlin', 'rust', 'php']))
+@click.argument('lang', default='java', type=click.Choice(lang_dict))
 def lang(lang):
     """leet lang java"""
     client.lang(lang)
@@ -63,6 +57,3 @@ leet.add_command(detail)
 leet.add_command(start)
 leet.add_command(lang)
 leet.add_command(test)
-
-if __name__ == '__main__':
-    leet()

@@ -1,35 +1,31 @@
+from .config import lang_dict
 import json
 import os
-import sys
 import time
 
 class Cache:
 
-    path = os.path.dirname(os.path.abspath(__file__))+'/'
-
     user = './data/user.json'
 
-    problems = './data/problems.json'
+    question_index = './data/question_index.json'
 
     question_details = './data/question_details.json'
 
     token_valid_time = 3600*5
 
-    problems_valid_time = 3600*24*7
+    question_index_valid_time = 3600*24*7
 
     question_list_capacity = 2001
 
-    langs = ['cpp', 'java', 'python', 'python3', 'c', 'csharp', 'javascript', 'ruby', 'swift', 'golang', 'scala', 'kotlin', 'rust', 'php']
-
     # helper methods
     def get_obj(self, filename):
-        file = open(self.path+filename, 'r')
+        file = open(os.path.dirname(os.path.abspath(__file__))+'/'+filename, 'r')
         obj = json.load(file)
         file.close()
         return obj
 
     def save_obj(self, filename, obj):
-        file = open(self.path+filename, 'w')
+        file = open(os.path.dirname(os.path.abspath(__file__))+'/'+filename, 'w')
         json.dump(obj, file)
         file.close()
 
@@ -38,7 +34,7 @@ class Cache:
         user = self.get_obj(self.user)
         if ('lang' not in user):
             return False
-        if (user['lang'] not in self.langs):
+        if (user['lang'] not in lang_dict):
             return False
         return True
     
@@ -100,10 +96,10 @@ class Cache:
 
     # question methods
     def check_question_index_status(self):
-        data = self.get_obj(self.problems)
+        data = self.get_obj(self.question_index)
         if ('problems' not in data or len(data['problems']) == 0):
             return False
-        if (time.time()-data['last_update_time'] > self.problems_valid_time):
+        if (time.time()-data['last_update_time'] > self.question_index_valid_time):
             return False
         return True
 
@@ -123,18 +119,21 @@ class Cache:
             'last_update_time': time.time(),
             'problems': problem_list,
         }
-        self.save_obj(self.problems, data)
+        self.save_obj(self.question_index, data)
 
-    def get_questions_with_range(self, start, end):
+    def get_question_index_with_range(self, start, end):
         results = []
-        problems = self.get_obj(self.problems)['problems']
+        problems = self.get_obj(self.question_index)['problems']
         for i in range(start, end+1):
             results.append(problems[i])
         return results
 
-    def get_question_detail_by_question_id(self, question_id):
-        problems = self.get_obj(self.problems)['problems']
+    def get_question_summary_by_question_id(self, question_id):
+        problems = self.get_obj(self.question_index)['problems']
         return problems[question_id]
+
+    def get_question_detail_by_question_id(self, question_id):
+        return self.get_obj(self.question_details)[question_id]
 
     def save_question_detail(self, question_detail):
         question_details = self.get_obj(self.question_details)

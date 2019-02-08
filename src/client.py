@@ -2,7 +2,8 @@
 from .cache import Cache
 from .leetcode import Leetcode
 from .system import System
-
+from .config import lang_dict
+from .screen import Screen
 import click
 
 class Client:
@@ -13,34 +14,38 @@ class Client:
 
     system = System()
 
-    langs = ['cpp', 'java', 'python', 'python3', 'c', 'csharp', 'javascript', 'ruby', 'swift', 'golang', 'scala', 'kotlin', 'rust', 'php']
+    screen = Screen()
 
+    # login methods
     def check_login(self):
         if (not self.cache.check_user_account_statue()):
             self.login()
         if (not self.cache.check_user_token_statue()):
-            self.update_token()
+            if not self.update_token():
+                self.login()
 
     def login(self):
-        click.echo('You need to login first')
-        username = click.prompt('Please enter your username')
-        password = click.prompt('Please enter your password', hide_input=True)
-        self.cache.save_username_and_password(username, password)
-        self.update_token()
-        print('Login success')
+        while True:
+            click.echo('You need to login first')
+            username = click.prompt('Please enter your username')
+            password = click.prompt('Please enter your password', hide_input=True)
+            self.cache.save_username_and_password(username, password)
+            if self.leetcode.login(username, password):
+                break
 
     def update_token(self):
         username = self.cache.get_user_username()
         password = self.cache.get_user_password()
-        self.leetcode.login(username, password)
+        return self.leetcode.login(username, password)
 
+    # question methods
     def submit(self, filename):
         self.leetcode.submit(filename)
 
     def show(self, start, end):
         if not self.cache.check_question_index_status():
             self.leetcode.get_all_problems()
-        print(self.cache.get_questions_with_range(start, end))
+        print(self.cache.get_question_index_with_range(start, end))
         
 
     def detail(self, question_id):
@@ -48,7 +53,7 @@ class Client:
         if not self.cache.check_question_index_status():
             self.leetcode.get_all_problems()
         # use the problem index to convert question_id to title_slug
-        problem_summary = self.cache.get_question_detail_by_question_id(question_id)
+        problem_summary = self.cache.get_question_summary_by_question_id(question_id)
         if (problem_summary == None):
             print("the problem does not exist")
             return None
@@ -58,7 +63,7 @@ class Client:
             print('detail not in the cache, fetch from leetcode')
             self.leetcode.get_one_problem_by_title_slug(problem_slug)
 
-        question_detail = self.cache.get_question_detail_by_question_id(question_id)
+        question_detail = self.cache.get_question_summary_by_question_id(question_id)
         print(question_detail)
         return question_detail
     
@@ -66,7 +71,7 @@ class Client:
         # check user's language
         if not self.cache.check_user_lang_status():
             lang = click.prompt('Please enter your preferred language')
-            if lang not in self.langs:
+            if lang not in lang_dict:
                 print('does not support this language')
                 return
             self.cache.save_user_lang(lang)
@@ -75,7 +80,7 @@ class Client:
         if not self.cache.check_question_index_status():
             self.leetcode.get_all_problems()
         # use the problem index to convert question_id to title_slug
-        problem_summary = self.cache.get_question_detail_by_question_id(question_id)
+        problem_summary = self.cache.get_question_summary_by_question_id(question_id)
         if (problem_summary == None):
             print("the problem does not exist")
             return None
@@ -85,11 +90,12 @@ class Client:
         if not self.cache.check_question_detail_status_by_question_id(question_id):
             print('detail not in the cache, fetch from leetcode')
             self.leetcode.get_one_problem_by_title_slug(problem_slug)
+
         question_detail = self.cache.get_question_detail_by_question_id(question_id)
         if question_detail == None:
             return
 
-        
+        print(question_detail)
         code_templates = question_detail['codeSnippets']
         for code_template in code_templates:
             if code_template['langSlug'] == lang:
