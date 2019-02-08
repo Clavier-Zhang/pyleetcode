@@ -57,14 +57,14 @@ class Client:
         if (problem_summary == None):
             print("the problem does not exist")
             return None
-        problem_slug = problem_summary['stat']['question__article__slug']
+        problem_slug = problem_summary['stat']['question__title_slug']
         # if the detail is not in the cache, fetch from leetcode
         if not self.cache.check_question_detail_status_by_question_id(question_id):
             print('detail not in the cache, fetch from leetcode')
             self.leetcode.get_one_problem_by_title_slug(problem_slug)
 
-        question_detail = self.cache.get_question_summary_by_question_id(question_id)
-        print(question_detail)
+        question_detail = self.cache.get_question_detail_by_question_id(question_id)
+        self.screen.print_question_detail(question_detail)
         return question_detail
     
     def start(self, question_id):
