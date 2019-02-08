@@ -5,11 +5,11 @@ import time
 
 class Cache:
 
-    user = './data/user.json'
+    user = 'data/user.json'
 
-    question_index = './data/question_index.json'
+    question_index = 'data/question_index.json'
 
-    question_details = './data/question_details.json'
+    question_details = 'data/question_details.json'
 
     token_valid_time = 3600*5
 

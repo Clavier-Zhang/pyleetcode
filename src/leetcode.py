@@ -58,7 +58,7 @@ class Leetcode:
             'login': username,
             'password': password
         }
-        response = self.session.post(urls[login], data=data, headers=self.headers)
+        response = self.session.post(urls['login'], data=data, headers=self.headers)
         if (response.status_code != 200):
             self.cache.clear_user()
             return False
