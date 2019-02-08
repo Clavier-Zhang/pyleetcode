@@ -45,7 +45,7 @@ class Client:
     def show(self, start, end):
         if not self.cache.check_question_index_status():
             self.leetcode.get_all_problems()
-        print(self.cache.get_question_index_with_range(start, end))
+        self.screen.print_question_summarys(self.cache.get_question_summarys_by_range(start, end))
         
 
     def detail(self, question_id):

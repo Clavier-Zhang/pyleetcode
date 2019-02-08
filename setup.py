@@ -9,6 +9,7 @@ setup(
         'Click',
         'bs4',
         'requests',
+        'colorama',
     ],
     entry_points='''
         [console_scripts]

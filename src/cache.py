@@ -121,11 +121,12 @@ class Cache:
         }
         self.save_obj(self.question_index, data)
 
-    def get_question_index_with_range(self, start, end):
+    def get_question_summarys_by_range(self, start, end):
         results = []
         problems = self.get_obj(self.question_index)['problems']
         for i in range(start, end+1):
-            results.append(problems[i])
+            if problems[i] != None:
+                results.append(problems[i])
         return results
 
     def get_question_summary_by_question_id(self, question_id):

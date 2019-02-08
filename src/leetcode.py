@@ -31,6 +31,14 @@ class Leetcode:
         response = self.session.post(url, data=data, headers=self.headers)
         return response
 
+    def get(self, url):
+        session_id = self.cache.get_user_session_id()
+        csrf_token = self.cache.get_user_csrf_token()
+        self.headers['Cookie'] = 'LEETCODE_SESSION=' + session_id + ';csrftoken=' + csrf_token + ';'
+        self.headers['X-CSRFToken'] = csrf_token
+        response = self.session.get(url, headers=self.headers)
+        return response
+
     def get_cookie(self, cookies, attribute):
         cookies = str(cookies)
         start = cookies.index(attribute)+1+len(attribute)
@@ -77,7 +85,7 @@ class Leetcode:
         print(response.json())
     
     def get_all_problems(self):
-        response = self.session.get(self.all_problems_url)
+        response = self.get(self.all_problems_url)
         self.cache.save_all_questions(response.json()['stat_status_pairs'])
 
     def get_one_problem_by_title_slug(self, titleSlug):
