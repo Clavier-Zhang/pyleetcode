@@ -21,5 +21,6 @@ setup(
         detail=src.commands:detail
         start=src.commands:start
         lang=src.commands:lang
+        clean=src.commands:clean
     ''',
 )

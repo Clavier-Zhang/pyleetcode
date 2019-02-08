@@ -113,3 +113,7 @@ class Client:
 
     def test(self, filename):
         self.leetcode.test(filename)
+
+    def clean(self):
+        self.cache.clean()
+        self.screen.print_clean_message()

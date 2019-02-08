@@ -173,6 +173,9 @@ class Screen:
     def print_generate_code_template_message(self, filename, lang):
         click.secho('Generate '+lang+' code template '+filename, fg='bright_white')
 
+    def print_clean_message(self):
+        click.secho('Clean cache success', fg='bright_white')
+        
     # test results
     def print_compare_test_result(self, test_result, expected_test_result):
         status_code = test_result['status_code']

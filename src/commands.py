@@ -7,7 +7,7 @@ client = Client()
 
 @click.group()
 def leet():
-    client.check_login()
+    pass
 
 
 @click.command()
@@ -30,6 +30,7 @@ def lang(lang):
 @click.argument('filename')
 def submit(filename):
     """leet submit 1-two-sum.java"""
+    client.check_login()
     client.submit(filename)
 
 @click.command()
@@ -37,18 +38,21 @@ def submit(filename):
 @click.argument('end', default=50, type=click.IntRange(0, 2000))
 def show(start, end):
     """leet show 1 50"""
+    client.check_login()
     client.show(start, end)
 
 @click.command()
 @click.argument('question_id', default=1, type=click.IntRange(0, 2000))
 def detail(question_id):
     """leet detail 1"""
+    client.check_login()
     client.detail(question_id)
 
 @click.command()
 @click.argument('question_id', default=1)
 def start(question_id):
     """leet start 1 50"""
+    client.check_login()
     client.start(question_id)
 
 
@@ -56,12 +60,19 @@ def start(question_id):
 @click.argument('filename')
 def test(filename):
     """leet test 1-two-sum.java"""
+    client.check_login()
     client.test(filename)
 
+
+@click.command()
+def clean():
+    """leet clean"""
+    client.clean()
 
 leet.add_command(login)
 leet.add_command(logout)
 leet.add_command(lang)
+leet.add_command(clean)
 
 leet.add_command(show)
 leet.add_command(detail)
@@ -69,4 +80,5 @@ leet.add_command(start)
 
 leet.add_command(test)
 leet.add_command(submit)
+
 

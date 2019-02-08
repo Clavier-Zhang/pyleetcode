@@ -153,3 +153,8 @@ class Cache:
             question_details = [None]*2000
         question_details[int(question_detail['questionId'])] = question_detail
         self.save_obj(self.question_details, question_details)
+
+    def clean(self):
+        open(self.path+self.user, 'w').write('{'+'}')
+        open(self.path+self.question_index, 'w').write('[]')
+        open(self.path+self.question_details, 'w').write('[]')
