@@ -2,6 +2,7 @@ from .config import lang_dict
 import json
 import os
 import time
+from pathlib import Path
 
 class Cache:
 
@@ -17,6 +18,8 @@ class Cache:
 
     question_list_capacity = 2001
 
+    path = os.path.dirname(os.path.abspath(__file__))+'/'
+
     # helper methods
     def get_obj(self, filename):
         file = open(os.path.dirname(os.path.abspath(__file__))+'/'+filename, 'r')
@@ -31,6 +34,10 @@ class Cache:
 
     # user cache methods
     def check_user_lang_status(self):
+        if not Path(self.path+'data'):
+            os.mkdir(self.path+'data')
+        if not Path(self.path+self.user).is_file():
+            open(self.path+self.user, 'w').write('{'+'}')
         user = self.get_obj(self.user)
         if ('lang' not in user):
             return False
@@ -39,6 +46,10 @@ class Cache:
         return True
     
     def check_user_account_statue(self):
+        if not Path(self.path+'data'):
+            os.mkdir(self.path+'data')
+        if not Path(self.path+self.user).is_file():
+            open(self.path+self.user, 'w').write('{'+'}')
         user = self.get_obj(self.user)
         if ('username' not in user or 'password' not in user):
             return False
@@ -47,6 +58,10 @@ class Cache:
         return True
 
     def check_user_token_statue(self):
+        if not Path(self.path+'data'):
+            os.mkdir(self.path+'data')
+        if not Path(self.path+self.user).is_file():
+            open(self.path+self.user, 'w').write('{'+'}')
         user = self.get_obj(self.user)
         if ('session_id' not in user or 'csrf_token' not in user):
             return False
@@ -94,6 +109,10 @@ class Cache:
 
     # question methods
     def check_question_index_status(self):
+        if not Path(self.path+'data'):
+            os.mkdir(self.path+'data')
+        if not Path(self.path+self.question_index).is_file():
+            open(self.path+self.question_index, 'w').write('{'+'}')
         data = self.get_obj(self.question_index)
         if ('problems' not in data or len(data['problems']) == 0):
             return False
@@ -102,6 +121,10 @@ class Cache:
         return True
 
     def check_question_detail_status_by_question_id(self, question_id):
+        if not Path(self.path+'data'):
+            os.mkdir(self.path+'data')
+        if not Path(self.path+self.question_details).is_file():
+            open(self.path+self.question_details, 'w').write('[]')
         data = self.get_obj(self.question_details)
         if len(data) == 0:
             return False
