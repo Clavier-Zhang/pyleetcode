@@ -118,5 +118,6 @@ class Client:
         self.cache.clean()
         self.screen.print_clean_message()
 
-    def diss(self, question_id):
-        self.leetcode.fetch_discussion_by_question_id(question_id)
+    def diss(self, question_id, discussion_postsid):
+        discussion_set=self.leetcode.fetch_discussion_by_question_id(question_id)['data']['questionTopicsList']['edges']
+        self.screen.print_discussion_titles(discussion_set)

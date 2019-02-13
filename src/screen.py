@@ -256,3 +256,17 @@ class Screen:
 
         # else:
         #     print('Unknown error')
+
+    def print_discussion_titles(self,discussion_set):
+        for discussion in discussion_set:
+            id="ID:"+discussion['node']['id']
+            title=discussion['node']['title']
+            title=title[0:57]+"..." if len(title)>60 else title
+            comment=str(discussion['node']['commentCount'])+" Comments"
+            votes=str(discussion['node']['post']['voteCount'])+" Upvotes"
+
+            click.secho(self.space(id, 15), fg='bright_white', nl=False)
+            click.secho(self.dash(title, 60), fg='bright_white', nl=False)
+            click.secho(self.space(votes, 15), fg='bright_white', nl=False)
+            click.secho(self.space(comment, 15), fg='bright_white')
+
