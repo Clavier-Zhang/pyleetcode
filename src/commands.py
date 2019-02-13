@@ -9,7 +9,6 @@ client = Client()
 def leet():
     pass
 
-
 @click.command()
 def login():
     """Login to your Leetcode account"""
@@ -74,11 +73,12 @@ def clean():
     client.clean()
 
 @click.command()
-def diss():
+@click.argument('question_id', default=1, type=click.IntRange(0, 2000))
+@click.argument('discussion_postsid', default=1, type=click.IntRange(0, 15))
+def diss(question_id,discussion_postsid):
     """Clean all cache"""
-    client.diss(1)
+    client.diss(question_id,discussion_postsid)
     print('test')
-
 
 leet.add_command(login)
 leet.add_command(logout)
