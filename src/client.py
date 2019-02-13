@@ -117,3 +117,6 @@ class Client:
     def clean(self):
         self.cache.clean()
         self.screen.print_clean_message()
+
+    def diss(self, question_id):
+        self.leetcode.fetch_discussion_by_question_id(question_id)

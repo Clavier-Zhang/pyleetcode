@@ -12,24 +12,28 @@ def leet():
 
 @click.command()
 def login():
-    pass
+    """Login to your Leetcode account"""
+    client.login()
 
 @click.command()
 def logout():
+    """Logout to your Leetcode account"""
     client.logout()
 
 @click.command()
 @click.argument('lang', default='java', type=click.Choice(lang_dict))
 def lang(lang):
-    """leet lang java"""
+    """Set the coding language manually\b
+       leet lang java"""
     client.lang(lang)
-
-
 
 @click.command()
 @click.argument('filename')
 def submit(filename):
-    """leet submit 1-two-sum.java"""
+    """
+    Submit solution to Leetcode\b
+    leet submit 1-two-sum.java
+    """
     client.check_login()
     client.submit(filename)
 
@@ -37,21 +41,21 @@ def submit(filename):
 @click.argument('start', default=1, type=click.IntRange(0, 2000))
 @click.argument('end', default=50, type=click.IntRange(0, 2000))
 def show(start, end):
-    """leet show 1 50"""
+    """Show questions by range"""
     client.check_login()
     client.show(start, end)
 
 @click.command()
 @click.argument('question_id', default=1, type=click.IntRange(0, 2000))
 def detail(question_id):
-    """leet detail 1"""
+    """Show the detail of the question"""
     client.check_login()
     client.detail(question_id)
 
 @click.command()
 @click.argument('question_id', default=1)
 def start(question_id):
-    """leet start 1 50"""
+    """Generate the code template for the question"""
     client.check_login()
     client.start(question_id)
 
@@ -59,15 +63,22 @@ def start(question_id):
 @click.command()
 @click.argument('filename')
 def test(filename):
-    """leet test 1-two-sum.java"""
+    """Test the code"""
     client.check_login()
     client.test(filename)
 
 
 @click.command()
 def clean():
-    """leet clean"""
+    """Clean all cache"""
     client.clean()
+
+@click.command()
+def diss():
+    """Clean all cache"""
+    client.diss(1)
+    print('test')
+
 
 leet.add_command(login)
 leet.add_command(logout)
@@ -80,5 +91,5 @@ leet.add_command(start)
 
 leet.add_command(test)
 leet.add_command(submit)
-
+leet.add_command(diss)
 
