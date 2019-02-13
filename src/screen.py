@@ -60,6 +60,13 @@ class Screen:
                 click.secho(line, fg='bright_white')
         click.secho('', fg='bright_white')
 
+    def print_discussion_post_content(self, content):
+        content = content.split('\\n')
+        key_words = ['def', 'class', 'if', 'else', 'in', 'elif']
+        for line in content:
+            click.secho(line, fg='bright_white')
+            
+
     def print_likes_and_dislikes(self, likes, dislikes):
         click.secho(str(likes)+' ', fg='bright_green', nl=False)
         click.secho(self.space('likes', 6), fg='bright_green', nl=False)
@@ -255,13 +262,20 @@ class Screen:
             print('Unknown error')
             print(submit_result)
 
-    def print_discussion_list(self, discussion_set):
+    def print_discussion_list(self, discussion_list):
         count = 1
-        for discussion in discussion_set:
+        for discussion in discussion_list:
             title = discussion['node']['title']
             click.secho(self.space(count, 4), fg='bright_white', nl=False)
             self.print_discussion_title(title)
             self.new_line()
             count += 1
+
+    def print_discussion_post(self, discussion_post):
+        title = discussion_post['title']
+        viewCount = discussion_post['viewCount']
+        content = discussion_post['post']['content']
+        click.secho(title, fg='bright_yellow')
+        self.print_discussion_post_content(content)
 
 

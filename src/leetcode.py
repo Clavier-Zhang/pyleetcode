@@ -154,11 +154,18 @@ class Leetcode:
 
     def fetch_discussion_by_question_id(self, question_id):
         data = {
-            "query":"query questionTopicsList($questionId: String!, $orderBy: TopicSortingOption, $skip: Int, $query: String, $first: Int!, $tags: [String!]) {\n  questionTopicsList(questionId: $questionId, orderBy: $orderBy, skip: $skip, query: $query, first: $first, tags: $tags) {\n    ...TopicsList\n    __typename\n  }\n}\n\nfragment TopicsList on TopicConnection {\n  totalNum\n  edges {\n    node {\n      id\n      title\n      commentCount\n      viewCount\n      pinned\n      tags {\n        name\n        slug\n        __typename\n      }\n      post {\n        id\n        voteCount\n        creationDate\n        author {\n          username\n          profile {\n            userSlug\n            userAvatar\n            __typename\n          }\n          __typename\n        }\n        status\n        coinRewards {\n          ...CoinReward\n          __typename\n        }\n        __typename\n      }\n      lastComment {\n        id\n        post {\n          id\n          author {\n            username\n            profile {\n              userSlug\n              __typename\n            }\n            __typename\n          }\n          peek\n          creationDate\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    cursor\n    __typename\n  }\n  __typename\n}\n\nfragment CoinReward on ScoreNode {\n  id\n  score\n  description\n  date\n  __typename\n}\n",
+            'query':"query questionTopicsList($questionId: String!, $orderBy: TopicSortingOption, $skip: Int, $query: String, $first: Int!, $tags: [String!]) {\n  questionTopicsList(questionId: $questionId, orderBy: $orderBy, skip: $skip, query: $query, first: $first, tags: $tags) {\n    ...TopicsList\n   }\n}\n\nfragment TopicsList on TopicConnection {\n  totalNum\n  edges {\n    node {\n      id\n      title\n      commentCount\n      viewCount\n     tags {\n        name\n        slug\n        }\n      post {\n        id\n        voteCount\n        creationDate\n        author {\n          profile {\n                  __typename\n          }\n          __typename\n        }\n        status\n        coinRewards {\n          ...CoinReward\n          __typename\n        }\n        __typename\n      }\n      lastComment {\n        id\n        post {\n          id\n          author {\n            username\n            profile {\n              userSlug\n              __typename\n            }\n            __typename\n          }\n          peek\n          creationDate\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    cursor\n    __typename\n  }\n  __typename\n}\n\nfragment CoinReward on ScoreNode {\n  id\n  score\n  description\n  date\n  __typename\n}\n",
             'variables': json.dumps({'orderBy': "most_votes", 'query': "", 'skip': 0, 'first': 20, 'tags': [], 'questionId': question_id}),
         }
         response = self.post(urls['graphql'], data=data).json()
-        return response
-        
+        return response['data']['questionTopicsList']['edges']
+
+    def fetch_decussion_post(self, post_id):
+        data = {
+            'query': 'query DiscussTopic($topicId: Int!) {\n  topic(id: $topicId) {\n    id\n    viewCount\n    topLevelCommentCount\n      title\n       post {\n      ...DiscussPost\n        }\n    }\n}\n\nfragment DiscussPost on PostNode {\n  id\n  voteCount\n  voteStatus\n  content\n    }\n \n',
+            'variables': json.dumps({'topicId': post_id}),
+        }
+        response = self.post(urls['graphql'], data=data).json()
+        return response['data']['topic']
 
 

@@ -119,9 +119,13 @@ class Client:
         self.screen.print_clean_message()
 
     def disscussion_list(self, question_id):
-        discussion_set=self.leetcode.fetch_discussion_by_question_id(question_id)['data']['questionTopicsList']['edges']
-        self.screen.print_discussion_list(discussion_set)
+        discussion_list = self.leetcode.fetch_discussion_by_question_id(question_id)
+        self.screen.print_discussion_list(discussion_list)
     
-    def disscussion_detail(self, question_id, rank):
-        discussion_set=self.leetcode.fetch_discussion_by_question_id(question_id)['data']['questionTopicsList']['edges']
-        self.screen.print_discussion_list(discussion_set)
+    def disscussion_post(self, question_id, rank):
+        discussion_list = self.leetcode.fetch_discussion_by_question_id(question_id)
+        post_ids = []
+        for discussion in discussion_list:
+            post_ids.append(discussion['node']['id'])
+        discussion_post = self.leetcode.fetch_decussion_post(post_ids[rank-1])
+        self.screen.print_discussion_post(discussion_post)

@@ -75,12 +75,12 @@ def clean():
 
 @click.command()
 @click.argument('question_id', default=1, type=click.IntRange(0, 2000))
-@click.argument('discussion_postsid', default=0, type=click.IntRange(0, 15))
-def diss(question_id, discussion_postsid):
-    if discussion_postsid == 0:
+@click.argument('rank', default=0, type=click.IntRange(1, 21))
+def diss(question_id, rank):
+    if rank == 0:
         client.disscussion_list(question_id)
     else:
-        print('test')
+        client.disscussion_post(question_id, rank)
 
 
 leet.add_command(login)
