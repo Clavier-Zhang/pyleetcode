@@ -72,13 +72,16 @@ def clean():
     """Clean all cache"""
     client.clean()
 
+
 @click.command()
 @click.argument('question_id', default=1, type=click.IntRange(0, 2000))
-@click.argument('discussion_postsid', default=1, type=click.IntRange(0, 15))
-def diss(question_id,discussion_postsid):
-    """Clean all cache"""
-    client.diss(question_id,discussion_postsid)
-    print('test')
+@click.argument('discussion_postsid', default=0, type=click.IntRange(0, 15))
+def diss(question_id, discussion_postsid):
+    if discussion_postsid == 0:
+        client.disscussion_list(question_id)
+    else:
+        print('test')
+
 
 leet.add_command(login)
 leet.add_command(logout)

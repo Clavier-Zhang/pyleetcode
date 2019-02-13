@@ -103,6 +103,15 @@ class Screen:
     def print_expected(self, expected):
         click.secho(self.space('Expected:', 10)+str(expected), fg='bright_white')
 
+    def print_discussion_title(self, title):
+        title = title.split()
+        key_words = ['java', 'c++', 'cpp', 'python', 'o(n)', 'o(nlogn)', 'o(logn)']
+        for word in title:
+            if word.lower() in key_words:
+                click.secho(word+' ', fg='bright_green', nl=False)
+            else:
+                click.secho(word+' ', fg='bright_white', nl=False)
+
     # question methods
     def print_question_summarys(self, question_summarys):
         for question_summary in question_summarys:
@@ -246,27 +255,13 @@ class Screen:
             print('Unknown error')
             print(submit_result)
 
-        # elif status_code == 20:
-        #     print('Compile Error')
-        #     print(test_result['full_compile_error'])
-
-        # elif status_code == 14:
-        #     print('Runtime Error')
-        #     print(test_result['runtime_error'])
-
-        # else:
-        #     print('Unknown error')
-
-    def print_discussion_titles(self,discussion_set):
+    def print_discussion_list(self, discussion_set):
+        count = 1
         for discussion in discussion_set:
-            id="ID:"+discussion['node']['id']
-            title=discussion['node']['title']
-            title=title[0:57]+"..." if len(title)>60 else title
-            comment=str(discussion['node']['commentCount'])+" Comments"
-            votes=str(discussion['node']['post']['voteCount'])+" Upvotes"
+            title = discussion['node']['title']
+            click.secho(self.space(count, 4), fg='bright_white', nl=False)
+            self.print_discussion_title(title)
+            self.new_line()
+            count += 1
 
-            click.secho(self.space(id, 15), fg='bright_white', nl=False)
-            click.secho(self.dash(title, 60), fg='bright_white', nl=False)
-            click.secho(self.space(votes, 15), fg='bright_white', nl=False)
-            click.secho(self.space(comment, 15), fg='bright_white')
 

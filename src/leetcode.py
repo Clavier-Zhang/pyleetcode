@@ -158,7 +158,6 @@ class Leetcode:
             'variables': json.dumps({'orderBy': "most_votes", 'query': "", 'skip': 0, 'first': 20, 'tags': [], 'questionId': question_id}),
         }
         response = self.post(urls['graphql'], data=data).json()
-        print('fetched')
         return response
         
 
