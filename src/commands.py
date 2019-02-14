@@ -74,9 +74,10 @@ def clean():
 
 
 @click.command()
-@click.argument('question_id', default=1, type=click.IntRange(0, 2000))
-@click.argument('rank', default=0, type=click.IntRange(1, 21))
+@click.argument('question_id', type = click.IntRange(0, 2000))
+@click.argument('rank', default=0, type=click.IntRange(0, 21))
 def diss(question_id, rank):
+    client.check_login()
     if rank == 0:
         client.disscussion_list(question_id)
     else:
