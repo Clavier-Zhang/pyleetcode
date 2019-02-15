@@ -104,3 +104,4 @@ venv.bak/
 .mypy_cache/
 
 src/data
+src/.idea
