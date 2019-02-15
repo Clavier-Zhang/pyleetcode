@@ -158,3 +158,5 @@ class Cache:
         open(self.path+self.user, 'w').write('{'+'}')
         open(self.path+self.question_index, 'w').write('[]')
         open(self.path+self.question_details, 'w').write('[]')
+
+cache = Cache()

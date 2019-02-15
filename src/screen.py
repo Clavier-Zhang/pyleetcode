@@ -62,11 +62,9 @@ class Screen:
 
     def print_discussion_post_content(self, content):
         content = content.split('\\n')
-        key_words = ['def', 'class', 'if', 'else', 'in', 'elif']
         for line in content:
             click.secho(line, fg='bright_white')
             
-
     def print_likes_and_dislikes(self, likes, dislikes):
         click.secho(str(likes)+' ', fg='bright_green', nl=False)
         click.secho(self.space('likes', 6), fg='bright_green', nl=False)
@@ -228,14 +226,13 @@ class Screen:
         if status_code == 10:
             status_runtime = submit_result['status_runtime']
             status_memory = submit_result['status_memory']
-            total_testcases = submit_result['total_testcases']
             runtime_percentile = submit_result['runtime_percentile']
             memory_percentile = submit_result['memory_percentile']
             self.print_success(status_msg)
             self.print_runtime(status_runtime, runtime_percentile)
             self.print_memory(status_memory, memory_percentile)
 
-        if status_code == 11:
+        elif status_code == 11:
             self.print_fail(status_msg)
             code_input = submit_result['input_formatted']
             std_output = submit_result['std_output']
@@ -246,14 +243,14 @@ class Screen:
             self.print_expected(expected_output)
             self.print_std_output(std_output)
 
-        if status_code == 14:
+        elif status_code == 14:
             self.print_fail(status_msg)
             last_testcase = submit_result['last_testcase'].replace('\n', ', ')
             std_output = submit_result['std_output']
             self.print_input(last_testcase)
             self.print_std_output(std_output)
             
-        if status_code == 20:
+        elif status_code == 20:
             self.print_fail(status_msg)
             full_compile_error = submit_result['full_compile_error']
             click.secho(full_compile_error, fg='bright_white')
@@ -273,9 +270,8 @@ class Screen:
 
     def print_discussion_post(self, discussion_post):
         title = discussion_post['title']
-        viewCount = discussion_post['viewCount']
         content = discussion_post['post']['content']
         click.secho(title, fg='bright_yellow')
         self.print_discussion_post_content(content)
 
-
+screen = Screen()

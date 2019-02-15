@@ -1,10 +1,8 @@
 import json
 from .config import lang_dict
-from .screen import Screen
+from .screen import screen
 
 class System:
-
-    screen = Screen()
 
     # helper methods
     def convert_sample_test_case_to_text(self, sample_test_case):
@@ -28,15 +26,13 @@ class System:
         file = open(filename, 'w')
         file.write(code+test_area)
         file.close()
-        self.screen.print_generate_code_template_message(filename, lang)
+        screen.print_generate_code_template_message(filename, lang)
 
     def get_solution(self, filename):
         raw_codes = open(filename,'r').read()
         solution = ''
-        start = False
+        start = True
         for line in raw_codes.splitlines():
-            if 'Solution' in line:
-                start = True
             if '/**' in line:
                 start = False
             if start:
@@ -56,3 +52,11 @@ class System:
             if 'Sample Test Case' in line:
                 start = True
         return test_case
+
+    def get_lang_from_filename(self, filename):
+        return filename[filename.index('.')+1:len(filename)]
+
+    def get_question_id_from_filename(self, filename):
+        return filename[filename.index('.')+1:len(filename)]
+
+system = System()
