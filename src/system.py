@@ -40,8 +40,6 @@ class System:
                 need_record = False
             if need_record:
                 solution += line+'\n'
-        print(repr(solution))
-        print(solution)
         return solution
 
     def get_test_case(self, filename):
