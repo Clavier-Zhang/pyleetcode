@@ -30,13 +30,18 @@ class System:
 
     def get_solution(self, filename):
         raw_codes = open(filename,'r').read()
+        has_class = False
         solution = ''
-        start = True
+        need_record = True
         for line in raw_codes.splitlines():
-            if '/**' in line:
-                start = False
-            if start:
+            if 'class' in line:
+                has_class = True
+            if '/**' in line and has_class:
+                need_record = False
+            if need_record:
                 solution += line+'\n'
+        print(repr(solution))
+        print(solution)
         return solution
 
     def get_test_case(self, filename):
@@ -54,9 +59,13 @@ class System:
         return test_case
 
     def get_lang_from_filename(self, filename):
+        while filename.find('/') != -1:
+            filename = filename[filename.find('/')+1:len(filename)]
         return filename[filename.index('.')+1:len(filename)]
 
     def get_question_id_from_filename(self, filename):
-        return filename[filename.index('.')+1:len(filename)]
+        while filename.find('/') != -1:
+            filename = filename[filename.find('/')+1:len(filename)]
+        return filename[0:filename.index('-')]
 
 system = System()

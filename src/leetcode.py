@@ -1,5 +1,5 @@
 from .cache import cache
-from .config import urls, querys
+from .config import urls, querys, SUCCESS, FAIL
 from .system import system
 from .screen import screen
 import requests
@@ -52,23 +52,36 @@ class Leetcode:
         response = self.post(urls['login'], data)
         if (response.status_code != 200):
             cache.clear_user()
-            return False
+            return FAIL
         csrf_token = self.get_cookie(self.session.cookies, 'csrftoken')
         session_id = self.get_cookie(self.session.cookies, 'LEETCODE_SESSION')
+        self.headers['Cookie'] = 'LEETCODE_SESSION=' + session_id + ';csrftoken=' + csrf_token + ';'
+        self.headers['X-CSRFToken'] = csrf_token
         cache.save_session_and_token(session_id, csrf_token)
-        return True
+        return SUCCESS
+
+    def logout(self):
+        self.headers['Cookie'] = ''
+        self.headers['X-CSRFToken'] = ''
+        cache.clean()
         
     def fetch_all_questions(self):
-        response = self.get(urls['all_questions']).json()
-        cache.save_all_questions(response['stat_status_pairs'])
+        response = self.get(urls['all_questions'])
+        if (response.status_code != 200):
+            return FAIL
+        cache.save_all_questions(response.json()['stat_status_pairs'])
+        return SUCCESS
 
     def fetch_question_detail(self, titleSlug):
         data = {
             'query': querys['question_detail'],
             'variables': json.dumps({'titleSlug': titleSlug})
         }
-        response = self.post(urls['graphql'], data=data).json()
-        cache.save_question_detail(response['data']['question'])
+        response = self.post(urls['graphql'], data=data)
+        if (response.status_code != 200):
+            return FAIL
+        cache.save_question_detail(response.json()['data']['question'])
+        return SUCCESS
 
     def submit(self, filename):
         data = {
@@ -76,9 +89,12 @@ class Leetcode:
             'question_id': system.get_question_id_from_filename(filename),
             'typed_code': system.get_solution(filename),
         }
-        response = self.post(urls['submit'], json.dumps(data)).json()
-        result = self.fetch_check_result(response['submission_id'])
+        response = self.post(urls['submit'], json.dumps(data))
+        if (response.status_code != 200):
+            return FAIL
+        result = self.fetch_check_result(response.json()['submission_id'])
         screen.print_submit_result(result)
+        return SUCCESS
     
     def test(self, filename):
         data = {
@@ -88,10 +104,15 @@ class Leetcode:
             'question_id': system.get_question_id_from_filename(filename),
             'typed_code': system.get_solution(filename),
         }
-        response = self.post(urls['test'], json.dumps(data)).json()
-        test_result = self.fetch_check_result(response['interpret_id'])
-        expected_test_result = self.fetch_check_result(response['interpret_expected_id'])
+        response = self.post(urls['test'], json.dumps(data))
+        if (response.status_code != 200):
+            print(data)
+            print(response.status_code)
+            return FAIL
+        test_result = self.fetch_check_result(response.json()['interpret_id'])
+        expected_test_result = self.fetch_check_result(response.json()['interpret_expected_id'])
         screen.print_compare_test_result(test_result, expected_test_result)
+        return SUCCESS
 
     def fetch_check_result(self, id):
         for count in range(0, 30):

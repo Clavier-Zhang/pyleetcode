@@ -11,6 +11,7 @@ setup(
         'requests',
         'colorama',
         'pathlib',
+        'pytest',
     ],
     entry_points='''
         [console_scripts]

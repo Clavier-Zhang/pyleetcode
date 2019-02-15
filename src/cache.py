@@ -84,10 +84,18 @@ class Cache:
         return self.get_obj(self.user)['password']
     
     def get_user_session_id(self):
-        return self.get_obj(self.user)['session_id']
+        user = self.get_obj(self.user)
+        if 'session_id' in user:
+            return user['session_id']
+        else:
+            return ''
     
     def get_user_csrf_token(self):
-        return self.get_obj(self.user)['csrf_token']
+        user = self.get_obj(self.user)
+        if 'csrf_token' in user:
+            return user['csrf_token']
+        else:
+            return ''
 
     def clear_user(self):
         self.save_obj(self.user, {})

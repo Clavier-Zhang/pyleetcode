@@ -1,3 +1,6 @@
+SUCCESS = True
+FAIL = False
+
 lang_dict = {
     'java': 'java',
     'cpp': 'cpp',
