@@ -6,10 +6,11 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'Click',
+        'click',
         'bs4',
         'requests',
         'colorama',
+        'pathlib',
     ],
     entry_points='''
         [console_scripts]
