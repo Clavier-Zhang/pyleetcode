@@ -12,7 +12,7 @@ def leet():
 @click.command()
 def login():
     """
-    leet login, 
+    leet login,
     Login to your LeetCode account
     """
     client.login()
@@ -20,7 +20,7 @@ def login():
 @click.command()
 def logout():
     """
-    leet logout, 
+    leet logout,
     Logout
     """
     client.logout()
@@ -50,30 +50,34 @@ def submit(filename):
 @click.argument('end', default=50, type=click.IntRange(0, 2000))
 def show(start, end):
     """
-    leet show [start] [end], 
+    leet show [start] [end],
     Show questions by range
     """
     client.check_login()
+    client.check_question_list()
     client.show(start, end)
 
 @click.command()
 @click.argument('question_id', default=1, type=click.IntRange(0, 2000))
 def detail(question_id):
     """
-    leet detail [question id], 
+    leet detail [question id],
     Show the detail of the question
     """
     client.check_login()
+    client.check_question_list()
     client.detail(question_id)
 
 @click.command()
 @click.argument('question_id', default=1)
 def start(question_id):
     """
-    leet generate [question id], 
+    leet generate [question id],
     Generate the code template for the question
     """
     client.check_login()
+    client.check_lang()
+    client.check_question_list()
     client.start(question_id)
 
 
@@ -90,7 +94,7 @@ def test(filename):
 @click.command()
 def clean():
     """
-    leet clean, 
+    leet clean,
     Clean all cache
     """
     client.clean()
@@ -101,8 +105,8 @@ def clean():
 @click.argument('rank', default=0, type=click.IntRange(0, 21))
 def diss(question_id, rank):
     """
-    leet diss [question id], 
-    leet diss [question id] [rank], 
+    leet diss [question id],
+    leet diss [question id] [rank],
     """
     client.check_login()
     if rank == 0:
