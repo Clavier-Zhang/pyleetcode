@@ -174,7 +174,7 @@ class Cache:
     def save_frequency(self, frequency_list):
         self.save_obj(self.frequency, frequency_list)
 
-    def get_frequency(self):
+    def get_frequency_order_list(self):
         return self.get_obj(self.frequency)
 
     def save_company_tags(self, company_tags):

@@ -143,18 +143,22 @@ class Leetcode:
         }
         response = self.post(urls['graphql'], data=data).json()
         return response['data']['topic']
-
+    
     def fetch_frequency_list(self):
         response = self.get(urls['all_questions'])
         if (response.status_code != 200):
             return FAIL
         questions = response.json()['stat_status_pairs']
-        frequency_list = [0]*(len(questions)+500)
+        frequency_list = []
         for question in questions:
             question_id = question['stat']['question_id']
             frequency = question['frequency']
-            frequency_list[question_id] = frequency
-        cache.save_frequency(frequency_list)
+            frequency_list.append((question_id, frequency))
+        frequency_list.sort(key=lambda elem : elem[1], reverse=True)
+        order_list = []
+        for pair in frequency_list:
+            order_list.append(pair[0])
+        cache.save_frequency(order_list)
         return SUCCESS
 
     def fetch_company_tags(self):
@@ -178,8 +182,10 @@ class Leetcode:
                 'favoriteIdHash': favoriteIdHash
                 }),
         }
-        response = self.post(urls['graphql'], data=data).json()
-        print(response)
+        response = self.post(urls['graphql'], data=data)
+        if (response.status_code != 200):
+            return FAIL
+        return SUCCESS
 
     def fetch_lists(self):
         data = {
@@ -218,6 +224,7 @@ class Leetcode:
         all_lists = self.fetch_lists()
         if (list_name not in all_lists):
             self.create_list(list_name)
+            all_lists = self.fetch_lists()
         favoriteIdHash = all_lists[list_name]
         for question_id in question_ids:
             self.add_one_question_to_list(question_id, favoriteIdHash)
@@ -235,6 +242,6 @@ class Leetcode:
         response = self.post(urls['graphql'], data=data)
         if (response.status_code != 200):
             return FAIL
-        print(response.json())
+        screen.print_add_question_to_list_result(response.json(), question_id)
 
 leetcode = Leetcode()

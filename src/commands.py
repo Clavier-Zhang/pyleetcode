@@ -2,6 +2,7 @@ import click
 from .leetcode import Leetcode
 from .client import Client
 from .config import lang_dict
+from .cache import cache
 
 client = Client()
 
@@ -115,12 +116,20 @@ def diss(question_id, rank):
         client.disscussion_post(question_id, rank)
 
 @click.command()
-def create():
+@click.argument('list_name', type=click.Choice(cache.get_company_tags().keys()))
+@click.argument('start', type=click.IntRange(1, 1000))
+@click.argument('end', type=click.IntRange(1, 1000))
+def create(list_name, start, end):
     """
-    leet diss [question id], 
+    leet create google 1 50
     """
+    if (start > end):
+        print('invalid input')
     client.check_login()
-    client.create_list()
+    if (list_name == 'frequency'):
+        client.create_frequency_list(start, end)
+
+    client.create_company_list(list_name, start, end)
 
 leet.add_command(login)
 leet.add_command(logout)

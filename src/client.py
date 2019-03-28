@@ -112,5 +112,29 @@ class Client:
         discussion_post = leetcode.fetch_discussion_post(post_ids[rank-1])
         screen.print_discussion_post(discussion_post)
 
-    def create_list(self):
-        leetcode.add_all_question_to_list([1, 2, 3, 4, 5, 6], 'alibaba')
+    def create_frequency_list(self, start, end):
+        order_list = cache.get_frequency_order_list()
+        if end > len(order_list):
+            print('The range exceeds the length of all questions')
+            print('Current questions length: '+str(len(order_list)))
+        temp = []
+        for i in range(start, end+1):
+            temp.append(order_list[i])
+        leetcode.add_all_question_to_list(temp, 'frequency-top-'+str(start)+'-'+str(end))
+
+    def create_company_list(self, company, start, end):
+        order_list = cache.get_frequency_order_list()
+        company_tags = cache.get_company_tags()
+        company_questions = company_tags[company]
+        if end > len(company_questions):
+            print('The range exceeds the length of '+company+' questions')
+            print(company+' questions length: '+str(len(company_questions)))
+            return
+        sorted_company_questions = []
+        for question in order_list:
+            if question in company_questions:
+                sorted_company_questions.append(question)
+        temp = []
+        for i in range(start, end+1):
+            temp.append(order_list[i])
+        leetcode.add_all_question_to_list(temp, company+'-top-'+str(start)+'-'+str(end))

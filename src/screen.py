@@ -274,4 +274,12 @@ class Screen:
         click.secho(title, fg='bright_yellow')
         self.print_discussion_post_content(content)
 
+    # create list
+    def print_add_question_to_list_result(self, result, question_id):
+        question_id = str(question_id)
+        if 'errors' not in result:
+            click.secho('Add question '+question_id+' success', fg='bright_green')
+        else:
+            click.secho('question '+question_id+' already exists ', fg='bright_red')
+
 screen = Screen()
