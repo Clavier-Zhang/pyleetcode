@@ -110,6 +110,13 @@ def diss(question_id, rank):
     else:
         client.disscussion_post(question_id, rank)
 
+@click.command()
+def create():
+    """
+    leet diss [question id], 
+    """
+    client.check_login()
+    client.create_list()
 
 leet.add_command(login)
 leet.add_command(logout)
@@ -124,3 +131,4 @@ leet.add_command(test)
 leet.add_command(submit)
 leet.add_command(diss)
 
+leet.add_command(create)

@@ -26,6 +26,7 @@ urls = {
     'all_questions': 'https://leetcode.com/api/problems/algorithms/',
     'test': 'https://leetcode.com/problems/add-two-numbers/interpret_solution/',
     'check': 'https://leetcode.com/submissions/detail/$ID/check/',
+    'company_tags': 'https://leetcode.com/problems/api/tags/'
 }
 
 querys = {
@@ -93,4 +94,63 @@ querys = {
             content
         }
     ''',
+    'create_list': '''
+        mutation addQuestionToNewFavorite($name: String!, $isPublicFavorite: Boolean!, $questionId: String!) {
+            addQuestionToNewFavorite(name: $name, isPublicFavorite: $isPublicFavorite, questionId: $questionId) {
+                ok
+                error
+                name
+                isPublicFavorite
+                favoriteIdHash
+                questionId
+                __typename
+            }
+        }
+    ''',
+    'fetch_lists': '''
+        query allFavorites {
+            favoritesLists {
+                allFavorites {
+                idHash
+                name
+                isPublicFavorite
+                questions {
+                    questionId
+                    __typename
+                }
+                __typename
+                }
+                officialFavorites {
+                idHash
+                name
+                questions {
+                    questionId
+                    __typename
+                }
+                __typename
+                }
+                __typename
+            }
+        }
+    ''',
+    'remove_from_list': '''
+        mutation removeQuestionFromFavorite($favoriteIdHash: String!, $questionId: String!) {
+            removeQuestionFromFavorite(favoriteIdHash: $favoriteIdHash, questionId: $questionId) {
+                ok
+                error
+                favoriteIdHash
+                questionId
+            }
+        }
+    ''',
+    'add_to_list': '''
+        mutation addQuestionToFavorite($favoriteIdHash: String!, $questionId: String!) {
+            addQuestionToFavorite(favoriteIdHash: $favoriteIdHash, questionId: $questionId) {
+                ok
+                error
+                favoriteIdHash
+                questionId
+            }
+        }
+    '''
 }

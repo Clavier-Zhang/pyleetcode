@@ -12,6 +12,10 @@ class Cache:
 
     question_details = 'data/question_details.json'
 
+    frequency = 'data/frequency.json'
+
+    company_tags = 'data/company_tags.json'
+
     token_valid_time = 3600*5
 
     question_index_valid_time = 3600*24*7
@@ -166,5 +170,17 @@ class Cache:
         open(self.path+self.user, 'w').write('{'+'}')
         open(self.path+self.question_index, 'w').write('[]')
         open(self.path+self.question_details, 'w').write('[]')
+
+    def save_frequency(self, frequency_list):
+        self.save_obj(self.frequency, frequency_list)
+
+    def get_frequency(self):
+        return self.get_obj(self.frequency)
+
+    def save_company_tags(self, company_tags):
+        self.save_obj(self.company_tags, company_tags)
+
+    def get_company_tags(self):
+        return self.get_obj(self.company_tags)
 
 cache = Cache()

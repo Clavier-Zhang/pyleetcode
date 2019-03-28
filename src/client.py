@@ -119,3 +119,6 @@ class Client:
             post_ids.append(discussion['node']['id'])
         discussion_post = leetcode.fetch_discussion_post(post_ids[rank-1])
         screen.print_discussion_post(discussion_post)
+
+    def create_list(self):
+        leetcode.add_all_question_to_list([1, 2, 3, 4, 5, 6], 'alibaba')

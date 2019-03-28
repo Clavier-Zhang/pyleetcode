@@ -103,6 +103,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-src/data
+question_details.json
+question_index.json
+user.json
+
 src/.idea
 .idea
