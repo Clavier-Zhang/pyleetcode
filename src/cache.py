@@ -3,6 +3,8 @@ import json
 import os
 import time
 from pathlib import Path
+from src.data.company_tags import company_tags_data
+from src.data.frequency import frequency_data
 
 class Cache:
 
@@ -175,12 +177,12 @@ class Cache:
         self.save_obj(self.frequency, frequency_list)
 
     def get_frequency_order_list(self):
-        return self.get_obj(self.frequency)
+        return frequency_data
 
     def save_company_tags(self, company_tags):
         self.save_obj(self.company_tags, company_tags)
 
     def get_company_tags(self):
-        return self.get_obj(self.company_tags)
+        return company_tags_data
 
 cache = Cache()
