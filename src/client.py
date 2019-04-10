@@ -35,7 +35,7 @@ class Client:
         password = cache.get_user_password()
         return leetcode.login(username, password)
 
-    def lang(self, lang):
+    def set_coding_language(self, lang):
         cache.save_user_lang(lang)
         screen.print_update_lang_message(lang)
 
@@ -47,19 +47,11 @@ class Client:
         screen.print_question_summarys(cache.get_question_summarys_by_range(start, end))
 
     def detail(self, question_id):
-        # use the problem index to convert question_id to title_slug
-        problem_summary = cache.get_question_summary_by_question_id(question_id)
-        if (problem_summary == None):
-            print("the problem does not exist")
-            return
-        problem_slug = problem_summary['stat']['question__title_slug']
-        # if the detail is not in the cache, fetch from leetcode
+        question_slug = cache.question_id_to_question_slug(question_id)
         if not cache.check_question_detail_status_by_question_id(question_id):
-            leetcode.fetch_question_detail(problem_slug)
-
+            leetcode.fetch_question_detail(question_slug)
         question_detail = cache.get_question_detail_by_question_id(question_id)
         screen.print_question_detail(question_detail)
-
 
     def check_lang(self):
         while not cache.check_user_lang_status():
@@ -73,16 +65,10 @@ class Client:
         if not cache.check_question_index_status():
             leetcode.fetch_all_questions()
 
-    def start(self, question_id):
-        # use the problem index to convert question_id to title_slug
-        problem_summary = cache.get_question_summary_by_question_id(question_id)
-        if (problem_summary == None):
-            print("the problem does not exist")
-            return None
-        problem_slug = problem_summary['stat']['question__title_slug']
-        # if the detail is not in the cache, fetch from leetcode
+    def create_template(self, question_id):
+        question_slug = cache.question_id_to_question_slug(question_id)
         if not cache.check_question_detail_status_by_question_id(question_id):
-            leetcode.fetch_question_detail(problem_slug)
+            leetcode.fetch_question_detail(question_slug)
 
         question_detail = cache.get_question_detail_by_question_id(question_id)
         if question_detail == None:
@@ -91,7 +77,7 @@ class Client:
         sample_test_case = question_detail['sampleTestCase']
         for code_template in code_templates:
             if code_template['langSlug'] == cache.get_user_lang():
-                system.generate_code_file(str(question_id)+'-'+problem_slug, cache.get_user_lang(), code_template['code'], sample_test_case)
+                system.generate_code_file(str(question_id)+'-'+question_slug, cache.get_user_lang(), code_template['code'], sample_test_case)
 
     def test(self, filename):
         leetcode.test(filename)
@@ -112,29 +98,29 @@ class Client:
         discussion_post = leetcode.fetch_discussion_post(post_ids[rank-1])
         screen.print_discussion_post(discussion_post)
 
-    def create_frequency_list(self, start, end):
-        order_list = cache.get_frequency_order_list()
-        if end > len(order_list):
-            print('The range exceeds the length of all questions')
-            print('Current questions length: '+str(len(order_list)))
-        temp = []
-        for i in range(start, end+1):
-            temp.append(order_list[i])
-        leetcode.add_all_question_to_list(temp, 'frequency-top-'+str(start)+'-'+str(end))
-
     def create_company_list(self, company, start, end):
-        order_list = cache.get_frequency_order_list()
-        company_tags = cache.get_company_tags()
+        company_tags = cache.get_company_frequency_ranking()
         company_questions = company_tags[company]
         if end > len(company_questions):
             print('The range exceeds the length of '+company+' questions')
             print(company+' questions length: '+str(len(company_questions)))
             return
-        sorted_company_questions = []
-        for question in order_list:
-            if question in company_questions:
-                sorted_company_questions.append(question)
-        temp = []
-        for i in range(start, end+1):
-            temp.append(order_list[i])
-        leetcode.add_all_question_to_list(temp, company+'-top-'+str(start)+'-'+str(end))
+        question_ids = []
+        for i in range(start-1, end):
+            question_ids.append(company_questions[i])
+        leetcode.add_all_question_to_list(question_ids, company+'-top-'+str(start)+'-'+str(end))
+
+    def contribute(self):
+        company_tags = leetcode.fetch_all_company_tags(1, 1200)
+        company_frequency_ranking = {}
+        for company_slug in cache.get_company_slugs():
+            targets = list(filter(lambda elem : company_slug in elem, company_tags))
+            targets.sort(key=lambda elem : elem[company_slug], reverse=True)
+            ranking = []
+            for target in targets:
+                ranking.append(target['question_id'])
+            company_frequency_ranking[company_slug] = ranking
+        company_frequency_ranking['frequency'] = leetcode.fetch_frequency_list()
+        cache.save_company_frequency_ranking(company_frequency_ranking)
+
+client = Client()

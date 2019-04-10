@@ -152,5 +152,14 @@ querys = {
                 questionId
             }
         }
+    ''',
+    'fetch_company_encounter_count': '''
+        query questionData($titleSlug: String!) {
+            question(titleSlug: $titleSlug) {
+                questionId
+                titleSlug
+                companyTagStats
+            }
+        }
     '''
 }

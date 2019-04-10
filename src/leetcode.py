@@ -158,21 +158,7 @@ class Leetcode:
         order_list = []
         for pair in frequency_list:
             order_list.append(pair[0])
-        cache.save_frequency(order_list)
-        return SUCCESS
-
-    def fetch_company_tags(self):
-        response = self.get(urls['company_tags'])
-        if (response.status_code != 200):
-            return FAIL
-        companies = response.json()['companies']
-        company_tags = {}
-        for company in companies:
-            company_name = company['slug']
-            question_list = company['questions']
-            company_tags[company_name] = question_list
-        cache.save_company_tags(company_tags)
-        return SUCCESS
+        return order_list
     
     def remove_question_from_list(self, question_id, favoriteIdHash):
         data = {
@@ -243,5 +229,28 @@ class Leetcode:
         if (response.status_code != 200):
             return FAIL
         screen.print_add_question_to_list_result(response.json(), question_id)
+
+    def fetch_one_company_encounter_count(self, question_id):
+        question_slug = cache.question_id_to_question_slug(question_id)
+        if question_slug == None:
+            return None
+        data = {
+            'query': querys['fetch_company_encounter_count'],
+            'variables': json.dumps({'titleSlug': question_slug}),
+        }
+        response = self.post(urls['graphql'], data=data)
+        company_tag = {'question_id': question_id}
+        for company in json.loads(response.json()['data']['question']['companyTagStats'])['1']:
+            company_tag[company['slug']] = company['timesEncountered']
+        return company_tag
+
+    def fetch_all_company_tags(self, start, end):
+        company_tags = []
+        for question_id in range(start, end+1):
+            company_tag = self.fetch_one_company_encounter_count(question_id)
+            if company_tag != None:
+                company_tags.append(company_tag)
+            print('finish fetch question '+str(question_id))
+        return company_tags
 
 leetcode = Leetcode()

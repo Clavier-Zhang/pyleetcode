@@ -3,8 +3,7 @@ import json
 import os
 import time
 from pathlib import Path
-from src.data.company_tags import company_tags_data
-from src.data.frequency import frequency_data
+from src.data.company_frequency_ranking import company_frequency_ranking
 
 class Cache:
 
@@ -14,9 +13,7 @@ class Cache:
 
     question_details = 'data/question_details.json'
 
-    frequency = 'data/frequency.json'
-
-    company_tags = 'data/company_tags.json'
+    company_frequency_ranking = 'data/company_frequency_ranking.py'
 
     token_valid_time = 3600*5
 
@@ -46,6 +43,11 @@ class Cache:
     def save_obj(self, filename, obj):
         file = open(os.path.dirname(os.path.abspath(__file__))+'/'+filename, 'w')
         json.dump(obj, file)
+        file.close()
+
+    def save_str(self, filename, text):
+        file = open(os.path.dirname(os.path.abspath(__file__))+'/'+filename, 'w')
+        file.write(text)
         file.close()
 
     # user cache methods
@@ -173,16 +175,19 @@ class Cache:
         open(self.path+self.question_index, 'w').write('[]')
         open(self.path+self.question_details, 'w').write('[]')
 
-    def save_frequency(self, frequency_list):
-        self.save_obj(self.frequency, frequency_list)
+    def question_id_to_question_slug(self, question_id):
+        summary = self.get_question_summary_by_question_id(question_id)
+        if summary == None:
+            return None
+        return self.get_question_summary_by_question_id(question_id)['stat']['question__title_slug']
 
-    def get_frequency_order_list(self):
-        return frequency_data
+    def save_company_frequency_ranking(self, obj):
+        self.save_str(self.company_frequency_ranking, 'company_frequency_ranking = '+str(obj))
+    
+    def get_company_frequency_ranking(self):
+        return company_frequency_ranking
 
-    def save_company_tags(self, company_tags):
-        self.save_obj(self.company_tags, company_tags)
-
-    def get_company_tags(self):
-        return company_tags_data
+    def get_company_slugs(self):
+        return list(company_frequency_ranking.keys())
 
 cache = Cache()

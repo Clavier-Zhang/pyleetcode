@@ -1,10 +1,7 @@
 import click
-from .leetcode import Leetcode
-from .client import Client
+from .client import client
 from .config import lang_dict
 from .cache import cache
-
-client = Client()
 
 @click.group()
 def leet():
@@ -33,7 +30,7 @@ def lang(lang):
     leet lang [language name]
     Set the coding language manually
     """
-    client.lang(lang)
+    client.set_coding_language(lang)
 
 @click.command()
 @click.argument('filename')
@@ -79,7 +76,7 @@ def start(question_id):
     client.check_login()
     client.check_lang()
     client.check_question_list()
-    client.start(question_id)
+    client.create_template(question_id)
 
 
 @click.command()
@@ -116,7 +113,7 @@ def diss(question_id, rank):
         client.disscussion_post(question_id, rank)
 
 @click.command()
-@click.argument('list_name', type=click.Choice(cache.get_company_tags().keys()))
+@click.argument('list_name', type=click.Choice(cache.get_company_slugs()))
 @click.argument('start', type=click.IntRange(1, 1000))
 @click.argument('end', type=click.IntRange(1, 1000))
 def create(list_name, start, end):
@@ -126,10 +123,13 @@ def create(list_name, start, end):
     if (start > end):
         print('invalid input')
     client.check_login()
-    if (list_name == 'frequency'):
-        client.create_frequency_list(start, end)
-
     client.create_company_list(list_name, start, end)
+
+@click.command()
+def contribute():
+    client.check_login()
+    client.contribute()
+
 
 leet.add_command(login)
 leet.add_command(logout)
@@ -145,3 +145,5 @@ leet.add_command(submit)
 leet.add_command(diss)
 
 leet.add_command(create)
+
+leet.add_command(contribute)
