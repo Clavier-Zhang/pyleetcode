@@ -107,7 +107,6 @@ class Leetcode:
         response = self.post(urls['test'], json.dumps(data))
         if (response.status_code != 200):
             print(data)
-            print(response.status_code)
             return FAIL
         test_result = self.fetch_check_result(response.json()['interpret_id'])
         expected_test_result = self.fetch_check_result(response.json()['interpret_expected_id'])

@@ -47,5 +47,4 @@ def test_test():
     assert leetcode.test(path+'templates/2-add-two-numbers.cpp') == FAIL
     assert leetcode.login('pyleetcodetest1', 'test1234') == SUCCESS
     assert leetcode.test(path+'templates/1-two-sum.java') == SUCCESS
-    # assert leetcode.test(path+'templates/2-add-two-numbers.cpp') == SUCCESS
     leetcode.logout()

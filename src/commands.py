@@ -3,9 +3,11 @@ from .client import client
 from .config import lang_dict
 from .cache import cache
 
+
 @click.group()
 def leet():
     pass
+
 
 @click.command()
 def login():
@@ -15,6 +17,7 @@ def login():
     """
     client.login()
 
+
 @click.command()
 def logout():
     """
@@ -22,6 +25,7 @@ def logout():
     Logout
     """
     client.logout()
+
 
 @click.command()
 @click.argument('lang', default='java', type=click.Choice(lang_dict))
@@ -31,6 +35,7 @@ def lang(lang):
     Set the coding language manually
     """
     client.set_coding_language(lang)
+
 
 @click.command()
 @click.argument('filename')
@@ -42,6 +47,7 @@ def submit(filename):
     """
     client.check_login()
     client.submit(filename)
+
 
 @click.command()
 @click.argument('start', default=1, type=click.IntRange(0, 2000))
@@ -55,6 +61,7 @@ def show(start, end):
     client.check_question_list()
     client.show(start, end)
 
+
 @click.command()
 @click.argument('question_id', default=1, type=click.IntRange(0, 2000))
 def detail(question_id):
@@ -65,6 +72,7 @@ def detail(question_id):
     client.check_login()
     client.check_question_list()
     client.detail(question_id)
+
 
 @click.command()
 @click.argument('question_id', default=1)
@@ -112,6 +120,7 @@ def diss(question_id, rank):
     else:
         client.disscussion_post(question_id, rank)
 
+
 @click.command()
 @click.argument('list_name', type=click.Choice(cache.get_company_slugs()))
 @click.argument('start', type=click.IntRange(1, 1000))
@@ -125,6 +134,7 @@ def create(list_name, start, end):
     client.check_login()
     client.create_company_list(list_name, start, end)
 
+
 @click.command()
 def contribute():
     client.check_login()
@@ -136,14 +146,16 @@ leet.add_command(logout)
 leet.add_command(lang)
 leet.add_command(clean)
 
+
 leet.add_command(show)
 leet.add_command(detail)
 leet.add_command(start)
+
 
 leet.add_command(test)
 leet.add_command(submit)
 leet.add_command(diss)
 
-leet.add_command(create)
 
+leet.add_command(create)
 leet.add_command(contribute)

@@ -184,8 +184,8 @@ class Cache:
     def save_company_frequency_ranking(self, obj):
         self.save_str(self.company_frequency_ranking, 'company_frequency_ranking = '+str(obj))
     
-    def get_company_frequency_ranking(self):
-        return company_frequency_ranking
+    def get_company_questions(self, company):
+        return company_frequency_ranking[company]
 
     def get_company_slugs(self):
         return list(company_frequency_ranking.keys())

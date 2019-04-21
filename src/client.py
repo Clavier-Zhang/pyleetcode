@@ -47,9 +47,7 @@ class Client:
         screen.print_question_summarys(cache.get_question_summarys_by_range(start, end))
 
     def detail(self, question_id):
-        question_slug = cache.question_id_to_question_slug(question_id)
-        if not cache.check_question_detail_status_by_question_id(question_id):
-            leetcode.fetch_question_detail(question_slug)
+        self.check_question_detail(question_id)
         question_detail = cache.get_question_detail_by_question_id(question_id)
         screen.print_question_detail(question_detail)
 
@@ -65,10 +63,14 @@ class Client:
         if not cache.check_question_index_status():
             leetcode.fetch_all_questions()
 
-    def create_template(self, question_id):
+    def check_question_detail(question_id):
         question_slug = cache.question_id_to_question_slug(question_id)
         if not cache.check_question_detail_status_by_question_id(question_id):
             leetcode.fetch_question_detail(question_slug)
+
+    def create_template(self, question_id):
+        question_slug = cache.question_id_to_question_slug(question_id)
+        self.check_question_detail(question_id)
 
         question_detail = cache.get_question_detail_by_question_id(question_id)
         if question_detail == None:
@@ -99,15 +101,12 @@ class Client:
         screen.print_discussion_post(discussion_post)
 
     def create_company_list(self, company, start, end):
-        company_tags = cache.get_company_frequency_ranking()
-        company_questions = company_tags[company]
+        company_questions = cache.get_company_questions(company)
         if end > len(company_questions):
             print('The range exceeds the length of '+company+' questions')
             print(company+' questions length: '+str(len(company_questions)))
             return
-        question_ids = []
-        for i in range(start-1, end):
-            question_ids.append(company_questions[i])
+        question_ids = company_questions[start-1:end]
         leetcode.add_all_question_to_list(question_ids, company+'-top-'+str(start)+'-'+str(end))
 
     def contribute(self):
