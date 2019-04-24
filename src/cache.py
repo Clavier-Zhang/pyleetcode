@@ -15,6 +15,8 @@ class Cache:
 
     company_frequency_ranking = 'data/company_frequency_ranking.py'
 
+    lru = 'data/lru.json'
+
     token_valid_time = 3600*5
 
     question_index_valid_time = 3600*24*7
@@ -32,6 +34,8 @@ class Cache:
             open(self.path+self.question_index, 'w').write('[]')
         if not Path(self.path+self.question_details).is_file():
             open(self.path+self.question_details, 'w').write('[]')
+        if not Path(self.path+self.lru).is_file():
+            open(self.path+self.lru, 'w').write('[]')
 
     # helper methods
     def get_obj(self, filename):
@@ -58,7 +62,7 @@ class Cache:
         if (user['lang'] not in lang_dict):
             return False
         return True
-    
+
     def check_user_account_statue(self):
         user = self.get_obj(self.user)
         if ('username' not in user or 'password' not in user):
@@ -90,14 +94,14 @@ class Cache:
 
     def get_user_password(self):
         return self.get_obj(self.user)['password']
-    
+
     def get_user_session_id(self):
         user = self.get_obj(self.user)
         if 'session_id' in user:
             return user['session_id']
         else:
             return ''
-    
+
     def get_user_csrf_token(self):
         user = self.get_obj(self.user)
         if 'csrf_token' in user:
@@ -183,11 +187,17 @@ class Cache:
 
     def save_company_frequency_ranking(self, obj):
         self.save_str(self.company_frequency_ranking, 'company_frequency_ranking = '+str(obj))
-    
+
     def get_company_questions(self, company):
         return company_frequency_ranking[company]
 
     def get_company_slugs(self):
         return list(company_frequency_ranking.keys())
+
+    def get_lru(self):
+        return self.get_obj(self.lru)
+
+    def save_lru(self, arr):
+        self.save_obj(self.lru, arr)
 
 cache = Cache()
