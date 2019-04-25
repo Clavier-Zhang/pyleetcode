@@ -1,11 +1,11 @@
-from .cache import cache
-from .config import urls, querys, SUCCESS, FAIL
-from .system import system
-from .screen import screen
 import requests
 import json
 from bs4 import BeautifulSoup
 import time
+from .cache import cache
+from .config import urls, querys, SUCCESS, FAIL
+from .screen import screen
+
 
 class Leetcode:
 
@@ -82,35 +82,32 @@ class Leetcode:
             return FAIL
         return response.json()['data']['question']
 
-    def submit(self, filename):
+    def submit(self, lang, question_id, typed_code):
         data = {
-            'lang': system.get_lang_from_filename(filename),
-            'question_id': system.get_question_id_from_filename(filename),
-            'typed_code': system.get_solution(filename),
+            'lang': lang,
+            'question_id': question_id,
+            'typed_code': typed_code,
         }
         response = self.post(urls['submit'], json.dumps(data))
         if (response.status_code != 200):
             return FAIL
         result = self.fetch_check_result(response.json()['submission_id'])
-        screen.print_submit_result(result)
-        return SUCCESS
+        return result
     
-    def test(self, filename):
+    def test(self, data_input, lang, question_id, typed_code):
         data = {
-            'data_input': system.get_test_case(filename),
+            'data_input': data_input,
             'judge_type': "large",
-            'lang': system.get_lang_from_filename(filename),
-            'question_id': system.get_question_id_from_filename(filename),
-            'typed_code': system.get_solution(filename),
+            'lang': lang,
+            'question_id': question_id,
+            'typed_code': typed_code,
         }
         response = self.post(urls['test'], json.dumps(data))
         if (response.status_code != 200):
-            print(data)
             return FAIL
         test_result = self.fetch_check_result(response.json()['interpret_id'])
         expected_test_result = self.fetch_check_result(response.json()['interpret_expected_id'])
-        screen.print_compare_test_result(test_result, expected_test_result)
-        return SUCCESS
+        return test_result, expected_test_result
 
     def fetch_check_result(self, id):
         for count in range(0, 30):

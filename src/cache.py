@@ -13,8 +13,6 @@ class Cache:
 
     company_frequency_ranking = 'data/company_frequency_ranking.py'
 
-    lru = 'data/lru.json'
-
     token_valid_time = 3600*5
 
     question_index_valid_time = 3600*24*7
@@ -30,8 +28,6 @@ class Cache:
             open(self.path+self.user, 'w').write('{'+'}')
         if not Path(self.path+self.question_index).is_file():
             open(self.path+self.question_index, 'w').write('[]')
-        if not Path(self.path+self.lru).is_file():
-            open(self.path+self.lru, 'w').write('[]')
 
     # helper methods
     def get_obj(self, filename):
@@ -155,7 +151,6 @@ class Cache:
     def clean(self):
         open(self.path+self.user, 'w').write('{'+'}')
         open(self.path+self.question_index, 'w').write('[]')
-        open(self.path+self.question_details, 'w').write('[]')
 
     def question_id_to_question_slug(self, question_id):
         summary = self.get_question_summary_by_question_id(question_id)

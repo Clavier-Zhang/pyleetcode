@@ -42,7 +42,11 @@ class Client:
 
     # question methods
     def submit(self, filename):
-        leetcode.submit(filename)
+        lang = system.get_lang_from_filename(filename)
+        question_id = system.get_question_id_from_filename(filename)
+        typed_code = system.get_solution(filename)
+        result = leetcode.submit(lang, question_id, typed_code)
+        screen.print_submit_result(result)
 
     def show(self, start, end):
         screen.print_question_summarys(cache.get_question_summarys_by_range(start, end))
@@ -78,10 +82,18 @@ class Client:
         sample_test_case = question_detail['sampleTestCase']
         for code_template in code_templates:
             if code_template['langSlug'] == cache.get_user_lang():
-                system.generate_code_file(str(question_id)+'-'+question_slug, cache.get_user_lang(), code_template['code'], sample_test_case)
+                filename = str(question_id)+'-'+question_slug
+                lang = cache.get_user_lang()
+                system.generate_code_file(filename, lang, code_template['code'], sample_test_case)
+                screen.print_generate_code_template_message(filename, lang)
 
     def test(self, filename):
-        leetcode.test(filename)
+        data_input = system.get_test_case(filename)
+        lang = system.get_lang_from_filename(filename)
+        question_id = system.get_question_id_from_filename(filename)
+        typed_code = system.get_solution(filename)
+        test_result, expected_test_result = leetcode.test(data_input, lang, question_id, typed_code)
+        screen.print_compare_test_result(test_result, expected_test_result)
 
     def clean(self):
         cache.clean()

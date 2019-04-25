@@ -1,6 +1,5 @@
 import json
 from .config import lang_dict
-from .screen import screen
 
 class System:
 
@@ -26,7 +25,6 @@ class System:
         file = open(filename, 'w')
         file.write(code+test_area)
         file.close()
-        screen.print_generate_code_template_message(filename, lang)
 
     def get_solution(self, filename):
         raw_codes = open(filename,'r').read()
@@ -64,6 +62,6 @@ class System:
     def get_question_id_from_filename(self, filename):
         while filename.find('/') != -1:
             filename = filename[filename.find('/')+1:len(filename)]
-        return filename[0:filename.index('-')]
+        return int(filename[0:filename.index('-')])
 
 system = System()
