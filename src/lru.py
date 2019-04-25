@@ -1,4 +1,7 @@
 from src.cache import cache
+import json
+import os
+from pathlib import Path
 
 class Node:
 
@@ -26,14 +29,33 @@ class LRU:
 
     tail = Node(0, 0)
 
+    lru = 'data/lru.json'
+
+    path = os.path.dirname(os.path.abspath(__file__))+'/'
+
     def __init__(self):
+        if not Path(self.path+'data').is_dir():
+            os.mkdir(self.path+'data')
+        if not Path(self.path+self.lru).is_file():
+            open(self.path+self.lru, 'w').write('[]')
         self.head.next = self.tail
         self.tail.pre = self.head
-        self.decode(cache.get_lru())
+        self.decode()
+
+    def get_obj(self, filename):
+        file = open(os.path.dirname(os.path.abspath(__file__))+'/'+filename, 'r')
+        obj = json.load(file)
+        file.close()
+        return obj
+
+    def save_obj(self, filename, obj):
+        file = open(os.path.dirname(os.path.abspath(__file__))+'/'+filename, 'w')
+        json.dump(obj, file)
+        file.close()
 
     def get(self, key):
         if key not in self.m:
-            return -1
+            return None
         node = self.m[key]
         self.remove(node)
         self.add(node)
@@ -45,7 +67,7 @@ class LRU:
         self.add(node)
         if self.size > self.capacity:
             self.remove(self.tail.pre)
-        cache.save_lru(self.encode())
+        self.save_obj(self.lru, self.encode())
 
     def add(self, node):
         node.pre = self.head
@@ -69,7 +91,8 @@ class LRU:
             cur = cur.next
         return arr
 
-    def decode(self, arr):
+    def decode(self):
+        arr = self.get_obj(self.lru)
         arr.reverse()
         for pair in arr:
             node = Node(pair[0], pair[1])
@@ -81,6 +104,6 @@ class LRU:
 
 lru = LRU()
 lru.put(1, 50)
-lru.put(3, 100)
-# lru.decode(arr)
-# lru.encode()
+# lru.put(3, 100)
+# lru.put(4, 400)
+# lru.put(4, 400)

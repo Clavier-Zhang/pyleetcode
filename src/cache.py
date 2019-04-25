@@ -1,8 +1,8 @@
 from .config import lang_dict
 import json
 import os
-import time
 from pathlib import Path
+import time
 from src.data.company_frequency_ranking import company_frequency_ranking
 
 class Cache:
