@@ -11,8 +11,6 @@ class Cache:
 
     question_index = 'data/question_index.json'
 
-    question_details = 'data/question_details.json'
-
     company_frequency_ranking = 'data/company_frequency_ranking.py'
 
     lru = 'data/lru.json'
@@ -32,8 +30,6 @@ class Cache:
             open(self.path+self.user, 'w').write('{'+'}')
         if not Path(self.path+self.question_index).is_file():
             open(self.path+self.question_index, 'w').write('[]')
-        if not Path(self.path+self.question_details).is_file():
-            open(self.path+self.question_details, 'w').write('[]')
         if not Path(self.path+self.lru).is_file():
             open(self.path+self.lru, 'w').write('[]')
 
@@ -134,14 +130,6 @@ class Cache:
             return False
         return True
 
-    def check_question_detail_status_by_question_id(self, question_id):
-        data = self.get_obj(self.question_details)
-        if len(data) == 0:
-            return False
-        if data[question_id] == None:
-            return False
-        return True
-
     def save_all_questions(self, problems):
         problem_list = [None]*self.question_list_capacity
         for problem in problems:
@@ -164,16 +152,6 @@ class Cache:
         problems = self.get_obj(self.question_index)['problems']
         return problems[question_id]
 
-    def get_question_detail_by_question_id(self, question_id):
-        return self.get_obj(self.question_details)[question_id]
-
-    def save_question_detail(self, question_detail):
-        question_details = self.get_obj(self.question_details)
-        if len(question_details) == 0:
-            question_details = [None]*2000
-        question_details[int(question_detail['questionId'])] = question_detail
-        self.save_obj(self.question_details, question_details)
-
     def clean(self):
         open(self.path+self.user, 'w').write('{'+'}')
         open(self.path+self.question_index, 'w').write('[]')
@@ -193,11 +171,5 @@ class Cache:
 
     def get_company_slugs(self):
         return list(company_frequency_ranking.keys())
-
-    def get_lru(self):
-        return self.get_obj(self.lru)
-
-    def save_lru(self, arr):
-        self.save_obj(self.lru, arr)
 
 cache = Cache()

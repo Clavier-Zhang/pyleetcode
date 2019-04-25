@@ -17,7 +17,7 @@ class Node:
         self.key = key
         self.value = value
 
-class LRU:
+class LRUCache:
 
     size = 0
 
@@ -59,6 +59,7 @@ class LRU:
         node = self.m[key]
         self.remove(node)
         self.add(node)
+        return node.value
 
     def put(self, key, value):
         if key in self.m:
@@ -101,9 +102,5 @@ class LRU:
 
 
 
+lru = LRUCache()
 
-lru = LRU()
-lru.put(1, 50)
-# lru.put(3, 100)
-# lru.put(4, 400)
-# lru.put(4, 400)

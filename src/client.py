@@ -4,6 +4,7 @@ from .leetcode import leetcode
 from .system import system
 from .config import lang_dict
 from .screen import screen
+from .lru_cache import lru
 import click
 
 class Client:
@@ -47,8 +48,7 @@ class Client:
         screen.print_question_summarys(cache.get_question_summarys_by_range(start, end))
 
     def detail(self, question_id):
-        self.check_question_detail(question_id)
-        question_detail = cache.get_question_detail_by_question_id(question_id)
+        question_detail = self.get_question_detail(question_id)
         screen.print_question_detail(question_detail)
 
     def check_lang(self):
@@ -63,18 +63,17 @@ class Client:
         if not cache.check_question_index_status():
             leetcode.fetch_all_questions()
 
-    def check_question_detail(question_id):
+    def get_question_detail(self, question_id):
         question_slug = cache.question_id_to_question_slug(question_id)
-        if not cache.check_question_detail_status_by_question_id(question_id):
-            leetcode.fetch_question_detail(question_slug)
+        question_detail = lru.get(str(question_id)+'_detail')
+        if question_detail == None:
+            question_detail = leetcode.fetch_question_detail(question_slug)
+            lru.put(str(question_id)+'_detail', question_detail)
+        return question_detail
 
     def create_template(self, question_id):
         question_slug = cache.question_id_to_question_slug(question_id)
-        self.check_question_detail(question_id)
-
-        question_detail = cache.get_question_detail_by_question_id(question_id)
-        if question_detail == None:
-            return
+        question_detail = self.get_question_detail(question_id)
         code_templates = question_detail['codeSnippets']
         sample_test_case = question_detail['sampleTestCase']
         for code_template in code_templates:

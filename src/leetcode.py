@@ -80,8 +80,7 @@ class Leetcode:
         response = self.post(urls['graphql'], data=data)
         if (response.status_code != 200):
             return FAIL
-        cache.save_question_detail(response.json()['data']['question'])
-        return SUCCESS
+        return response.json()['data']['question']
 
     def submit(self, filename):
         data = {
