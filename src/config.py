@@ -163,3 +163,28 @@ querys = {
         }
     '''
 }
+
+leet_clean_help_msg      = """\b leet clean                          leet clean
+"""
+leet_login_help_msg      = """\b leet login                          leet login
+"""
+leet_logout_help_msg     = """\b leet logout                         leet logout
+"""
+leet_lang_help_msg       = """\b leet lang <language>                leet lang java
+"""
+leet_start_help_msg      = """\b leet start <question_id>            leet start 1
+"""
+leet_detail_help_msg     = """\b leet detail <question_id>           leet detail 1
+"""
+leet_submit_help_msg     = """\b leet submit <filename>              leet submit 1-two-sum.java
+"""
+leet_test_help_msg       = """\b leet test <filename>                leet test 1-two-sum.java
+"""
+leet_show_help_msg       = """\b leet show <start> <end>             leet show 1 50
+"""
+leet_diss_help_msg       = """\b leet diss <question_id> <ranking>   leet diss 1
+"""
+leet_create_help_msg     = """\b leet create <company> <start> <end> leet create google 1 50
+"""
+leet_contribute_help_msg = """\b leet contribute                     leet contribute\b
+"""
