@@ -1,3 +1,4 @@
+[![license](https://img.shields.io/npm/l/pyleetcode.svg?style=flat)](https://github.com/Clavier-Zhang/pyleetcode/blob/master/LICENSE)
 # pyleetcode
 
 LeetCode in Command Line!!!
