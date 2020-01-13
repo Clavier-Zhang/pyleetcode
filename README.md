@@ -1,28 +1,63 @@
-[![license](https://img.shields.io/npm/l/pyleetcode.svg?style=flat)](https://github.com/Clavier-Zhang/pyleetcode/blob/master/LICENSE)
-# pyleetcode
+<br />
+<p align="center">
+  <a href="https://github.com/Clavier-Zhang/AWSL-Japanese">
+    <img src="./doc/LEETCODE_logo.png" alt="Logo" width="100">
+  </a>
+  <h3 align="center">Pyleetcode</h3>
+  <p align="center">
+    LeetCode in Command Line!!!
+    <br />
+  </p>
+</p>
 
-LeetCode in Command Line!!!
 
-Fight with LeetCode Questions at any time, any places
+## Table of Contents
 
-## Installation
+- [Table of Contents](#table-of-contents)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+  - [Auth](#auth)
+  - [Logout](#logout)
+  - [Set Coding Language](#set-coding-language)
+  - [Show Question List](#show-question-list)
+  - [Show Question Detail](#show-question-detail)
+  - [Generate code templates](#generate-code-templates)
+  - [How to write testcase](#how-to-write-testcase)
+  - [Test](#test)
+  - [Submit](#submit)
+  - [Show Discussion Titles](#show-discussion-titles)
+  - [Show Discussion Detail](#show-discussion-detail)
 
-From pip3
+
+
+## Getting Started
+
+From pip
 ```sh
-pip3 install pyleetcode
+pip install pyleetcode
 ```
 
-Or git clone, cd to the directory
+From github
+
 ```sh
-pip3 install --editable .
+git clone https://github.com/Clavier-Zhang/pyleetcode.git
+cd pyleetcode
+pip install --editable .
 ```
 
-## Quick Start
 
-### Login
+
+## Usage
+
+### Auth
 ```sh
 leet login
+leet logout
 ```
+<p float="left">
+    <img src="./doc/images/login.gif"  width="420" >
+    <img src="./doc/images/logout.gif"  width="420" >
+</p>
 ![](./doc/images/login.gif)
 
 ### Logout
@@ -87,4 +122,6 @@ Show the detail of a discussion post
 leet diss [question id] [rank]
 ```
 ![](./doc/images/diss_detail.gif)
+
+
 
