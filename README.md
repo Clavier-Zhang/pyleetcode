@@ -8,9 +8,13 @@
     LeetCode in Command Line!!!
     <br />
   </p>
+  
+  </p>
 </p>
 
-
+<p align="center">
+    *IMPORTANT* LeetCode enhanced their API security at Nov 2019 (something from Google). Currently, only Chinese Leetcode accounts can use this tool.
+</p>
 
 ## Table of Contents
 

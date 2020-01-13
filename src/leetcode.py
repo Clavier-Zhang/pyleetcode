@@ -37,7 +37,7 @@ class Leetcode:
         return cookies[0:start]
     
     def fetch_first_CSRFtoken(self):
-        response = self.session.head(urls['login'])
+        response = self.session.head(urls['cookie'])
         csrf_token = self.get_cookie(response.cookies, 'csrftoken')
         self.headers['Cookie'] = 'csrftoken=' + csrf_token + ';'
         return csrf_token
@@ -49,7 +49,10 @@ class Leetcode:
             'login': username,
             'password': password
         }
+
         response = self.post(urls['login'], data)
+
+
         if (response.status_code != 200):
             cache.clear_user()
             return FAIL

@@ -19,15 +19,27 @@ lang_dict = {
 }
 
 urls = {
-    'base': 'https://leetcode.com',
-    'login': 'https://leetcode.com/accounts/login/',
-    'graphql': 'https://leetcode.com/graphql',
-    'submit': 'https://leetcode.com/problems/add-two-numbers/submit/',
+    'cookie': 'https://leetcode.com/accounts/login/',
+    'base': 'https://leetcode-cn.com',
+    'login': 'https://leetcode-cn.com/accounts/login/',
+    'graphql': 'https://leetcode-cn.com/graphql/',
+    'submit': 'https://leetcode-cn.com/problems/two-sum/submit/',
     'all_questions': 'https://leetcode.com/api/problems/algorithms/',
-    'test': 'https://leetcode.com/problems/add-two-numbers/interpret_solution/',
-    'check': 'https://leetcode.com/submissions/detail/$ID/check/',
+    'test': 'https://leetcode-cn.com/problems/two-sum/interpret_solution/',
+    'check': 'https://leetcode-cn.com/submissions/detail/$ID/check/',
     'company_tags': 'https://leetcode.com/problems/api/tags/'
 }
+# invalid now
+# urls = {
+#     'base': 'https://leetcode.com',
+#     'login': 'https://leetcode.com/accounts/login/',
+#     'graphql': 'https://leetcode.com/graphql',
+#     'submit': 'https://leetcode.com/problems/add-two-numbers/submit/',
+#     'all_questions': 'https://leetcode.com/api/problems/algorithms/',
+#     'test': 'https://leetcode.com/problems/add-two-numbers/interpret_solution/',
+#     'check': 'https://leetcode.com/submissions/detail/$ID/check/',
+#     'company_tags': 'https://leetcode.com/problems/api/tags/'
+# }
 
 querys = {
     'question_detail': '''
