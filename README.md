@@ -11,9 +11,11 @@
 </p>
 
 
+
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
+- [About the Project](#about-the-project)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
   - [Auth](#auth)
@@ -28,7 +30,8 @@
   - [Show Discussion Titles](#show-discussion-titles)
   - [Show Discussion Detail](#show-discussion-detail)
 
-
+## About the Project
+<img src="./doc/help.png"  width="840" >
 
 ## Getting Started
 
@@ -54,11 +57,8 @@ pip install --editable .
 leet login
 leet logout
 ```
-<p float="left">
-    <img src="./doc/images/login.gif"  width="420" >
-    <img src="./doc/images/logout.gif"  width="420" >
-</p>
-![](./doc/images/login.gif)
+<img src="./doc/images/login.gif"  width="420" >
+<img src="./doc/images/logout.gif"  width="420" >
 
 ### Logout
 ```sh
